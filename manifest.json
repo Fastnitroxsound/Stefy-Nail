@@ -1,0 +1,11 @@
+{
+  "name": "STEFY NAIL - Manicura",
+  "short_name": "STEFY NAIL",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff5f8",
+  "theme_color": "#ff5da2",
+  "icons": [
+    { "src": "logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
