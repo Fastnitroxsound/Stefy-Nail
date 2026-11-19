@@ -10,7 +10,6 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
 body{background:#fff5f8;color:#333}
 html{scroll-behavior:smooth}
-/* HEADER */
 header{background:linear-gradient(135deg,#fff0f6 0%,#ffe8f1 40%,#ffd0e2 100%);text-align:center;padding:25px 15px 30px;position:relative;overflow:hidden}
 header::before{content:"💅 ✨ 🌸 💖 ✨ 💅 ✨ 🌸 💖";position:absolute;top:10px;left:0;right:0;font-size:22px;opacity:.25;letter-spacing:8px}
 .logo{width:100%;max-width:320px;display:block;margin:5px auto 5px;background:#fff;padding:12px;border-radius:28px;box-shadow:0 10px 30px rgba(255,93,162,.25)}
@@ -128,14 +127,7 @@ input,select{width:100%;padding:13px;border-radius:12px;border:1px solid #ffd0e2
 
 <section>
   <h2 id="trabajos">✨ Mis trabajos</h2>
-  <div class="galeria" id="galeria">
-    <img src="trabajo1.jpeg" alt="Trabajo 1" data-index="0">
-    <img src="trabajo2.jpeg" alt="Trabajo 2" data-index="1">
-    <img src="trabajo3.jpeg" alt="Trabajo 3" data-index="2">
-    <img src="trabajo4.jpeg" alt="Trabajo 4" data-index="3">
-    <img src="trabajo5.jpeg" alt="Trabajo 5" data-index="4">
-    <img src="trabajo6.jpeg" alt="Trabajo 6" data-index="5">
-  </div>
+  <div class="galeria" id="galeria"></div>
   <p style="text-align:center;font-size:13px;color:#888;margin-top:10px">Tocá una foto para verla grande 🔍</p>
   <button class="btn-vermas" id="btnVerMas">Ver más trabajos 📸 →</button>
 </section>
@@ -193,14 +185,68 @@ input,select{width:100%;padding:13px;border-radius:12px;border:1px solid #ffd0e2
 </div>
 
 <script>
-const principales = ["trabajo1.jpeg","trabajo2.jpeg","trabajo3.jpeg","trabajo4.jpeg","trabajo5.jpeg","trabajo6.jpeg"];
-const biblioteca = [
-  "trabajo7.jpeg","trabajo8.jpeg","trabajo9.jpeg","trabajo10.jpeg",
-  "trabajo11.jpeg","trabajo12.jpeg","trabajo13.jpeg","trabajo14.jpeg",
-  "trabajo15.jpeg","trabajo16.jpeg","trabajo17.jpeg","trabajo18.jpeg"
-];
-let listaActual = principales;
+// ===== SISTEMA AUTOMATICO - NO HAY QUE TOCAR NADA =====
+// Solo subis trabajo15.jpeg, trabajo16.jpeg... y aparecen solas
+// Busca del 1 al 100, las que existen las muestra
+let principales = [];
+let biblioteca = [];
+let listaActual = [];
 let actual = 0;
+
+function existeImagen(src){
+  return new Promise((resolve)=>{
+    const test = new Image();
+    test.onload = ()=> resolve(true);
+    test.onerror = ()=> resolve(false);
+    test.src = src;
+  });
+}
+
+async function cargarFotos(){
+  const encontradas = [];
+  // Probamos del 1 al 100
+  for(let i=1; i<=100; i++){
+    const src = `trabajo${i}.jpeg`;
+    const existe = await existeImagen(src);
+    if(existe){
+      encontradas.push(src);
+    } else {
+      // Si faltan 3 seguidas, asumimos que no hay mas y cortamos para no tardar
+      // Pero seguimos buscando por si salteaste un numero
+      // Simple: si i > 20 y ya pasaron 3 fallos seguidos, frenamos
+      // Para este proyecto lo dejamos simple: seguimos hasta 100 pero es rapido
+    }
+  }
+
+  principales = encontradas.slice(0, 6);
+  biblioteca = encontradas.slice(6);
+
+  // Dibujar las 6 principales
+  const galeria = document.getElementById('galeria');
+  galeria.innerHTML = '';
+  principales.forEach((src, i)=>{
+    const im = document.createElement('img');
+    im.src = src; im.alt = 'Trabajo ' + (i+1);
+    im.dataset.index = i;
+    galeria.appendChild(im);
+  });
+
+  // Dibujar biblioteca
+  const grid = document.getElementById('biblioGrid');
+  grid.innerHTML = '';
+  biblioteca.forEach((src, i)=>{
+    const im = document.createElement('img');
+    im.src = src; im.alt = 'Trabajo ' + (i+7);
+    im.addEventListener('click', () => abrir(i, biblioteca));
+    grid.appendChild(im);
+  });
+
+  // Si no hay mas que las 6, ocultamos el boton Ver Mas
+  if(biblioteca.length === 0){
+    document.getElementById('btnVerMas').style.display = 'none';
+  }
+}
+
 function abrir(i, lista){
   listaActual = lista; actual = i; mostrar();
   document.getElementById('lightbox').classList.add('abierto');
@@ -214,6 +260,7 @@ function mostrar(){
 }
 function cambiar(dir){ actual = (actual + dir + listaActual.length) % listaActual.length; mostrar(); }
 function cerrar(){ document.getElementById('lightbox').classList.remove('abierto'); document.body.style.overflow = ''; }
+
 document.getElementById('galeria').addEventListener('click', function(e){
   const img = e.target.closest('img'); if(!img) return;
   abrir(parseInt(img.dataset.index), principales);
@@ -225,14 +272,6 @@ document.getElementById('btnVerMas').addEventListener('click', function(){
 document.getElementById('btnCerrarBiblio').addEventListener('click', function(){
   document.getElementById('biblioteca').classList.remove('abierta');
   document.body.style.overflow = '';
-});
-const grid = document.getElementById('biblioGrid');
-biblioteca.forEach((src, i) => {
-  const im = document.createElement('img');
-  im.src = src; im.alt = 'Trabajo ' + (i+7);
-  im.addEventListener('click', () => abrir(i, biblioteca));
-  im.onerror = () => im.style.display = 'none';
-  grid.appendChild(im);
 });
 document.getElementById('btnCerrar').addEventListener('click', cerrar);
 document.getElementById('btnPrev').addEventListener('click', function(e){ e.stopPropagation(); cambiar(-1); });
@@ -256,6 +295,9 @@ function reservar(){
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(e=>console.log('SW error',e)); });
 }
+
+// Arrancar
+cargarFotos();
 </script>
 </body>
 </html>
