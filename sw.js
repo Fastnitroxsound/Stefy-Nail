@@ -1,66 +1,49 @@
-const CACHE_NAME = 'stefy-nail-v3';
+// STEFY NAIL - Service Worker - Versión 5
+const CACHE_NAME = 'stefy-nail-v4';
 
-// Solo los archivos fijos. Las fotos NO van aca, se guardan solas cuando se ven
-const CORE_FILES = [
+const urlsToCache = [
   './',
   './index.html',
   './style.css',
-  './app.js',
+  './script.js',
   './manifest.json',
   './logo.png'
 ];
 
-self.addEventListener('install', (event) => {
+// 1. Instalar - Guarda la versión nueva
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(CORE_FILES);
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
+// 2. Activar - Borra TODAS las versiones viejas (la fea)
+self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then((keys) => {
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Borrando caché vieja:', cacheName);
+            return caches.delete(cacheName);
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  return self.clients.claim();
 });
 
-self.addEventListener('fetch', (event) => {
-  const url = event.request.url;
-
-  // Si es una foto de trabajo (trabajo1.jpeg, trabajo15.jpeg, etc)
-  // La busca en cache, si no esta la baja y la guarda sola para la proxima
-  if (url.includes('trabajo') && url.endsWith('.jpeg')) {
-    event.respondWith(
-      caches.open(CACHE_NAME).then((cache) => {
-        return cache.match(event.request).then((cached) => {
-          if (cached) return cached;
-          return fetch(event.request).then((response) => {
-            // Solo guardamos si la foto existe (200)
-            if (response.status === 200) {
-              cache.put(event.request, response.clone());
-            }
-            return response;
-          }).catch(() => cached);
-        });
-      })
-    );
-    return;
-  }
-
-  // Para todo lo demas (html, logo, etc)
+// 3. Cuando pide algo - Lo busca primero en caché, si no está lo busca en internet
+self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request);
-    })
+    caches.match(event.request)
+      .then(response => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      })
   );
 });

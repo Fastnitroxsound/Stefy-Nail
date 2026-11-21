@@ -3,191 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stefy Nail - Turnos</title>
-<style>
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
-  body{background:#fff5f8;color:#333}
-  header{background:linear-gradient(135deg,#ff9ec6,#ff6fa5);color:#fff;text-align:center;padding:35px 15px 25px}
-  header h1{font-size:42px;letter-spacing:1px}
-  header p{opacity:.95;margin-top:5px}
-  .wrap{max-width:900px;margin:0 auto;padding:20px 15px 60px}
-  h2{color:#d63384;margin:25px 0 12px;font-size:24px}
-  .servicios{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  @media(max-width:600px){.servicios{grid-template-columns:1fr}}
-  .card{background:#fff;border:1.5px solid #ffd0e2;border-radius:16px;padding:15px}
-  .card b{color:#c2185b}
-  .card span{float:right;background:#ffe0ec;color:#c2185b;padding:3px 10px;border-radius:20px;font-weight:700;font-size:13px}
-  .card p{font-size:13px;color:#777;margin-top:5px}
-  .card button{margin-top:10px;width:100%;background:#ff6fa5;color:#fff;border:0;padding:10px;border-radius:10px;font-weight:700;cursor:pointer}
-  .form-box{background:#fff;border:2px solid #ff9ec6;border-radius:18px;padding:20px;margin-top:10px;box-shadow:0 10px 25px rgba(255,111,165,.15)}
-  label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px;color:#c2185b}
-  input,select{width:100%;padding:12px;border:1.5px solid #ffd0e2;border-radius:10px;font-size:15px;outline:none;background:#fffafa}
-  input:focus,select:focus{border-color:#ff6fa5}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  @media(max-width:600px){.row{grid-template-columns:1fr}}
-  .horas{display:flex;flex-wrap:wrap;gap:8px;margin-top:5px}
-  .horas button{padding:9px 14px;border:1.5px solid #ffd0e2;background:#fff;border-radius:20px;cursor:pointer;font-weight:600}
-  .horas button.activa{background:#ff6fa5;color:#fff;border-color:#ff6fa5}
-  .horas button.ocupada{background:#eee;color:#aaa;text-decoration:line-through;cursor:not-allowed}
-  .btn-reservar{width:100%;background:#25D366;color:#fff;border:0;padding:15px;border-radius:12px;font-size:17px;font-weight:800;margin-top:18px;cursor:pointer}
-  .btn-reservar:disabled{opacity:.6}
-  #msg{text-align:center;margin-top:12px;font-weight:700}
-  .ok{color:green}.err{color:red}
-  .galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .galeria img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px}
-  footer{text-align:center;padding:20px;color:#999;font-size:13px}
-</style>
+<title>STEFY NAIL - Manicura</title>
+<meta name="description" content="Manicura, Pedicura, Cejas y Esculpidas. Reservá tu turno en 1 minuto por WhatsApp.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff5da2">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <header>
-  <h1>💅 STEFY NAIL</h1>
-  <p>Uñas que enamoran • Reservá tu turno online</p>
+  <img src="logo.png" alt="Stefy Nail Logo" class="logo">
+  <p class="sub">Manicura • Pedicura • Cejas • Esculpidas</p>
+  <p class="frase">Tus manos hablan de vos. Cuidalas con el amor que merecen 💅✨</p>
+  <div class="badges">
+    <span>💅 +200 Clientas Felices</span>
+    <span>⭐ 5.0 Excelente</span>
+    <span>📍 Buenos Aires</span>
+  </div>
+  <div class="btn-header">
+    <a href="#turno" class="btn-rosa">Reservar Turno 💅</a>
+    <a href="#trabajos" class="btn-blanco">Ver Trabajos</a>
+  </div>
 </header>
 
-<div class="wrap">
-  <h2>Servicios</h2>
-  <div class="servicios" id="servicios"></div>
-
-  <h2 id="reservar">📅 Reservar turno</h2>
-  <div class="form-box">
-    <label>Servicio elegido</label>
-    <select id="servicio"></select>
-
-    <div class="row">
-      <div><label>Nombre</label><input id="nombre" placeholder="Ej: Camila"></div>
-      <div><label>Apellido</label><input id="apellido" placeholder="Ej: Pérez"></div>
-    </div>
-
-    <label>Teléfono / WhatsApp</label>
-    <input id="telefono" placeholder="Ej: 1151173182" inputmode="numeric">
-
-    <label>Fecha</label>
-    <input type="date" id="fecha">
-
-    <label>Hora</label>
-    <div class="horas" id="horas"></div>
-    <p id="aviso-horas" style="font-size:13px;color:#888;margin-top:6px">Elegí una fecha para ver los horarios libres.</p>
-
-    <button class="btn-reservar" id="btnReservar" onclick="reservar()">Reservar turno 💖</button>
-    <div id="msg"></div>
+<section id="precios">
+  <h2>💅 Precios</h2>
+  <div class="precios-grid">
+    <div class="card"><div><b>Manicura Semipermanente</b><span>Esmaltado + Manicura Rusa</span></div><div class="precio">$12.000</div></div>
+    <div class="card"><div><b>Esculpidas en Gel</b><span>Extensión + Diseño</span></div><div class="precio">$18.000</div></div>
+    <div class="card"><div><b>Pedicura Completa</b><span>Pedicura + Semipermanente</span></div><div class="precio">$14.000</div></div>
+    <div class="card"><div><b>Perfilado de Cejas</b><span>Diseño + Perfilado</span></div><div class="precio">$6.000</div></div>
+    <div class="card"><div><b>Retiro + Manicura</b><span>Retiro + Cuidado</span></div><div class="precio">$8.000</div></div>
+    <div class="card"><div><b>Diseño Personalizado</b><span>Nail Art + 3D</span></div><div class="precio">Consultar</div></div>
   </div>
+</section>
 
-  <h2>Galería</h2>
-  <div class="galeria">
-    <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&q=80">
-    <img src="https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=400&q=80">
-    <img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400&q=80">
-    <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&q=80">
-    <img src="https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=400&q=80">
-    <img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400&q=80">
+<section id="trabajos">
+  <h2>✨ Mis Trabajos</h2>
+  <div class="galeria" id="galeria"></div>
+  <button class="btn-vermas" id="btnVerMas">Ver toda la Biblioteca 📸</button>
+</section>
+
+<div class="fila-pc">
+<section id="turno">
+  <h2>📅 Reservar Turno</h2>
+  <p id="msgTurno" class="msg-turno"></p>
+  <input type="text" id="nombre" placeholder="Tu nombre">
+  <input type="text" id="apellido" placeholder="Tu apellido">
+  <input type="tel" id="telefono" placeholder="Tu WhatsApp / Teléfono">
+  <select id="servicio">
+    <option>Manicura Semipermanente - $12.000</option>
+    <option>Esculpidas en Gel - $18.000</option>
+    <option>Pedicura Completa - $14.000</option>
+    <option>Perfilado de Cejas - $6.000</option>
+    <option>Retiro + Manicura - $8.000</option>
+    <option>Diseño Personalizado - Consultar</option>
+  </select>
+  <input type="date" id="fecha">
+  <select id="hora">
+    <option value="">Elegí una hora</option>
+    <option>09:00</option>
+    <option>10:00</option>
+    <option>11:00</option>
+    <option>12:00</option>
+    <option>13:00</option>
+    <option>14:00</option>
+    <option>15:00</option>
+    <option>16:00</option>
+    <option>17:00</option>
+    <option>18:00</option>
+    <option>19:00</option>
+    <option>20:00</option>
+  </select>
+  <button class="btn-turno" id="btnReservar">Reservar por WhatsApp 💖</button>
+  <p class="texto-ayuda">Al reservar se guarda tu turno y se abre WhatsApp para confirmarlo.</p>
+</section>
+
+<section>
+  <h2>🕐 Horarios</h2>
+  <div class="horario">
+    <p><b>Lunes a Viernes</b></p>
+    <p>09:00 a 20:00 hs</p>
+    <p><b>Sábado</b></p>
+    <p>10:00 a 18:00 hs</p>
+    <p><b>Domingo</b></p>
+    <p>Cerrado</p>
   </div>
-  <p style="text-align:center;margin-top:15px;font-size:13px;color:#888">Después reemplazamos estas fotos por las 100 que ya tenías.</p>
+</section>
 </div>
-<footer>Stefy Nail • stefynail26@gmail.com • Turnos online</footer>
 
-<script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyhlgIlvtcfj2fveW_cJxgyL8wlY5S1CvFIS6AgwwkG6YswaP-9y-Qv_mtH41AuVtH/exec";
+<footer>
+  <p>© 2026 Stefy Nail - Todos los derechos reservados</p>
+  <p><a href="https://wa.me/5491151173182">WhatsApp</a> • <a href="https://instagram.com/stefynail">Instagram</a></p>
+  <p class="version">Versión 5</p>
+</footer>
 
-const servicios = [
-  {n:"Semipermanente", p:"$25.000", d:"Esmaltado semipermanente, 2 semanas de duración"},
-  {n:"Kapping", p:"$30.000", d:"Refuerzo sobre tu uña natural"},
-  {n:"Soft Gel", p:"$38.000", d:"Extensión soft gel, largo a elección"},
-  {n:"Esculpidas", p:"$42.000", d:"Esculpidas acrílicas / gel"},
-  {n:"Press On", p:"$22.000", d:"Uñas press on personalizadas"},
-  {n:"Retiro + Semi", p:"$28.000", d:"Retiro de material anterior + semi nuevo"},
-];
-const horasDisponibles = ["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"];
-let horaElegida = "";
-let ocupadas = [];
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="cerrar" id="btnCerrar">✕</button>
+  <button class="flecha prev" id="btnPrev">‹</button>
+  <img id="fotoGrande" src="" alt="Trabajo">
+  <button class="flecha next" id="btnNext">›</button>
+  <div class="contador" id="contador"></div>
+</div>
 
-// Cargar servicios
-const cont = document.getElementById('servicios');
-const sel = document.getElementById('servicio');
-servicios.forEach(s=>{
-  cont.innerHTML += `<div class="card"><b>${s.n}</b><span>${s.p}</span><p>${s.d}</p><button onclick="elegirServicio('${s.n} - ${s.p}')">Reservar este</button></div>`;
-  sel.innerHTML += `<option>${s.n} - ${s.p}</option>`;
-});
-function elegirServicio(v){ sel.value=v; document.getElementById('reservar').scrollIntoView({behavior:'smooth'}); }
+<!-- Biblioteca -->
+<div class="biblioteca" id="biblioteca">
+  <div class="biblioteca-header">
+    <h2>📸 Biblioteca Completa</h2>
+    <button class="btn-cerrar-biblio" id="btnCerrarBiblio">Cerrar ✕</button>
+  </div>
+  <p class="texto-biblio">Todos los trabajos. Tocá una foto para verla grande.</p>
+  <div class="biblio-grid" id="biblioGrid"></div>
+</div>
 
-// Fecha mínima = hoy
-const hoy = new Date().toISOString().split('T')[0];
-document.getElementById('fecha').min = hoy;
-document.getElementById('fecha').value = hoy;
-
-async function cargarOcupadas(){
-  const fecha = document.getElementById('fecha').value;
-  if(!fecha) return;
-  document.getElementById('aviso-horas').textContent = "Cargando horarios...";
-  try{
-    const res = await fetch(SCRIPT_URL);
-    const data = await res.json();
-    // La planilla guarda fecha como texto, comparamos solo la parte de fecha
-    ocupadas = data.filter(o => {
-      const f = String(o.fecha).split('T')[0];
-      // o.fecha puede venir como "Mon Nov 25..." si Sheets lo manda como fecha, intentamos normalizar
-      let fechaNorm = f;
-      if(o.fecha.includes('Nov') || o.fecha.includes('Dec')){
-        const d = new Date(o.fecha);
-        fechaNorm = d.toISOString().split('T')[0];
-      }
-      // Si en la planilla pusiste 2026-11-25, compara directo
-      return fechaNorm === fecha || String(o.fecha).includes(fecha);
-    }).map(o=> String(o.hora).slice(0,5));
-  }catch(e){ ocupadas = []; }
-  renderHoras();
-}
-function renderHoras(){
-  const box = document.getElementById('horas');
-  box.innerHTML = "";
-  horaElegida = "";
-  horasDisponibles.forEach(h=>{
-    const esOcupada = ocupadas.includes(h);
-    const b = document.createElement('button');
-    b.textContent = h;
-    b.type = "button";
-    if(esOcupada){ b.className="ocupada"; b.disabled=true; }
-    else b.onclick = ()=>{
-      document.querySelectorAll('#horas button').forEach(x=>x.classList.remove('activa'));
-      b.classList.add('activa'); horaElegida = h;
-    };
-    box.appendChild(b);
-  });
-  document.getElementById('aviso-horas').textContent = ocupadas.length ? `Ocupadas: ${ocupadas.join(', ')}` : "Todas libres, elegí una.";
-}
-document.getElementById('fecha').addEventListener('change', cargarOcupadas);
-cargarOcupadas();
-
-async function reservar(){
-  const nombre = document.getElementById('nombre').value.trim();
-  const apellido = document.getElementById('apellido').value.trim();
-  const telefono = document.getElementById('telefono').value.trim();
-  const fecha = document.getElementById('fecha').value;
-  const servicio = document.getElementById('servicio').value;
-  const msg = document.getElementById('msg');
-  if(!nombre || !fecha || !horaElegida){ msg.className="err"; msg.textContent="Completá nombre, fecha y hora."; return; }
-  const btn = document.getElementById('btnReservar');
-  btn.disabled = true; btn.textContent = "Guardando...";
-  try{
-    const res = await fetch(SCRIPT_URL, {
-      method:"POST",
-      body: JSON.stringify({fecha, hora:horaElegida, nombre, apellido, servicio, telefono})
-    });
-    const data = await res.json();
-    if(data.ok){
-      msg.className="ok"; msg.textContent="✅ ¡Turno guardado! Stefy te confirma por WhatsApp.";
-      // Abrir WhatsApp con el resumen
-      const texto = encodeURIComponent(`Hola Stefy! Quiero reservar: ${servicio} - ${fecha} ${horaElegida} - ${nombre} ${apellido} - Tel: ${telefono}`);
-      window.open(`https://wa.me/541151173182?text=${texto}`, "_blank");
-      cargarOcupadas();
-    } else {
-      msg.className="err"; msg.textContent="Esa hora ya está ocupada, elegí otra.";
-      cargarOcupadas();
-    }
-  }catch(e){
-    msg.className="err"; msg.textContent="Hubo un error, intentá de nuevo.";
-  }
-  btn.disabled = false; btn.textContent = "Reservar turno 💖";
-}
-</script>
+<script src="script.js"></script>
 </body>
 </html>
