@@ -1,9 +1,11 @@
-const CACHE_NAME = 'stefy-nail-v2';
+const CACHE_NAME = 'stefy-nail-v3';
 
 // Solo los archivos fijos. Las fotos NO van aca, se guardan solas cuando se ven
 const CORE_FILES = [
   './',
   './index.html',
+  './style.css',
+  './app.js',
   './manifest.json',
   './logo.png'
 ];
