@@ -1,5 +1,5 @@
-// STEFY NAIL - Service Worker - Versión 5
-const CACHE_NAME = 'stefy-nail-v4';
+// STEFY NAIL - Service Worker - Versión 6 Optimizada
+const CACHE_NAME = 'stefy-nail-v6';
 
 const urlsToCache = [
   './',
@@ -19,14 +19,13 @@ self.addEventListener('install', event => {
   );
 });
 
-// 2. Activar - Borra TODAS las versiones viejas (la fea)
+// 2. Activar - Borra TODAS las versiones viejas
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Borrando caché vieja:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -35,15 +34,33 @@ self.addEventListener('activate', event => {
   );
 });
 
-// 3. Cuando pide algo - Lo busca primero en caché, si no está lo busca en internet
+// 3. OPTIMIZADO: Estrategia inteligente
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  // NO cachear las fotos de trabajos, son muchas y pesan
+  // Solo cachear HTML, CSS, JS, logo
+  if (url.pathname.includes('trabajo')) {
+    // Las fotos van directo a internet, no llenan el caché
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // Para el resto: primero caché, si no está va a internet
+  // Y si hay internet, actualiza el caché en segundo plano
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response;
+    caches.match(event.request).then(cached => {
+      const network = fetch(event.request).then(response => {
+        // Solo guarda si es válida
+        if (response && response.status === 200 && event.request.method === 'GET') {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         }
-        return fetch(event.request);
-      })
+        return response;
+      }).catch(() => cached);
+
+      // Si hay caché, lo muestra ya (instantáneo), y actualiza por detrás
+      return cached || network;
+    })
   );
 });

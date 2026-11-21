@@ -7,12 +7,17 @@
 <meta name="description" content="Manicura, Pedicura, Cejas y Esculpidas. Reservá tu turno en 1 minuto por WhatsApp.">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ff5da2">
+
+<!-- OPTIMIZADO: Logo carga primero, CSS no bloquea -->
+<link rel="preload" as="image" href="logo.png" fetchpriority="high">
+<link rel="preload" as="style" href="style.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-  <img src="logo.png" alt="Stefy Nail Logo" class="logo">
+  <!-- OPTIMIZADO: width/height + fetchpriority para que no salte el layout -->
+  <img src="logo.png" alt="Stefy Nail Logo" class="logo" width="320" height="320" fetchpriority="high" decoding="async">
   <p class="sub">Manicura • Pedicura • Cejas • Esculpidas</p>
   <p class="frase">Tus manos hablan de vos. Cuidalas con el amor que merecen 💅✨</p>
   <div class="badges">
@@ -40,7 +45,15 @@
 
 <section id="trabajos">
   <h2>✨ Mis Trabajos</h2>
-  <div class="galeria" id="galeria"></div>
+  <!-- OPTIMIZADO: Skeleton mientras cargan las fotos, no se ve en blanco -->
+  <div class="galeria" id="galeria">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
   <button class="btn-vermas" id="btnVerMas">Ver toda la Biblioteca 📸</button>
 </section>
 
@@ -48,9 +61,9 @@
 <section id="turno">
   <h2>📅 Reservar Turno</h2>
   <p id="msgTurno" class="msg-turno"></p>
-  <input type="text" id="nombre" placeholder="Tu nombre">
-  <input type="text" id="apellido" placeholder="Tu apellido">
-  <input type="tel" id="telefono" placeholder="Tu WhatsApp / Teléfono">
+  <input type="text" id="nombre" placeholder="Tu nombre" autocomplete="given-name">
+  <input type="text" id="apellido" placeholder="Tu apellido" autocomplete="family-name">
+  <input type="tel" id="telefono" placeholder="Tu WhatsApp / Teléfono" autocomplete="tel" inputmode="tel">
   <select id="servicio">
     <option>Manicura Semipermanente - $12.000</option>
     <option>Esculpidas en Gel - $18.000</option>
@@ -95,14 +108,14 @@
 <footer>
   <p>© 2026 Stefy Nail - Todos los derechos reservados</p>
   <p><a href="https://wa.me/5491151173182">WhatsApp</a> • <a href="https://instagram.com/stefynail">Instagram</a></p>
-  <p class="version">Versión 5</p>
+  <p class="version">Versión 6 - Optimizada</p>
 </footer>
 
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox">
   <button class="cerrar" id="btnCerrar">✕</button>
   <button class="flecha prev" id="btnPrev">‹</button>
-  <img id="fotoGrande" src="" alt="Trabajo">
+  <img id="fotoGrande" src="" alt="Trabajo" decoding="async">
   <button class="flecha next" id="btnNext">›</button>
   <div class="contador" id="contador"></div>
 </div>
@@ -117,6 +130,7 @@
   <div class="biblio-grid" id="biblioGrid"></div>
 </div>
 
-<script src="script.js"></script>
+<!-- OPTIMIZADO: defer para que el JS no frene la carga de la página -->
+<script src="script.js" defer></script>
 </body>
 </html>

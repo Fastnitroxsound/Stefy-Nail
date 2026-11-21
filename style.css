@@ -36,12 +36,16 @@ header::before {
 .logo {
   width: 100%;
   max-width: 320px;
+  height: auto;
+  aspect-ratio: 1 / 1;
   display: block;
   margin: 5px auto 5px;
   background: #fff;
   padding: 12px;
   border-radius: 28px;
   box-shadow: 0 10px 30px rgba(255, 93, 162, .25);
+  /* OPTIMIZADO: el logo no se pixela ni salta */
+  object-fit: contain;
 }
 
 header .sub {
@@ -160,11 +164,32 @@ h2 {
   object-fit: cover;
   border-radius: 16px;
   cursor: pointer;
-  transition: transform .2s;
+  /* OPTIMIZADO: la imagen aparece suave, no de golpe */
+  animation: aparecer .4s ease both;
 }
 
 .galeria img:hover {
   transform: scale(1.03);
+}
+
+/* OPTIMIZADO: Skeleton - cuadritos rosas que se ven mientras carga la foto */
+.skeleton {
+  width: 100%;
+  height: 140px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #ffe8f1 25%, #ffd0e2 50%, #ffe8f1 75%);
+  background-size: 200% 100%;
+  animation: brillo 1.2s infinite;
+}
+
+@keyframes brillo {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: scale(.96); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .btn-vermas {
@@ -292,6 +317,8 @@ select {
   border-radius: 14px;
   cursor: zoom-in;
   transition: transform .3s;
+  /* OPTIMIZADO: no carga gigante, se adapta */
+  will-change: transform;
 }
 
 .lightbox img.zoom {
@@ -355,6 +382,8 @@ select {
   z-index: 998;
   overflow-y: auto;
   padding: 20px 15px 40px;
+  /* OPTIMIZADO: scroll más suave en celu */
+  -webkit-overflow-scrolling: touch;
 }
 
 .biblioteca.abierta {
@@ -395,6 +424,8 @@ select {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
+  /* OPTIMIZADO: el navegador solo renderiza lo que se ve */
+  content-visibility: auto;
 }
 
 .biblio-grid img {
@@ -403,6 +434,7 @@ select {
   object-fit: cover;
   border-radius: 16px;
   cursor: pointer;
+  animation: aparecer .4s ease both;
 }
 
 @media (min-width: 768px) {
@@ -443,6 +475,10 @@ select {
   }
 
   .galeria img {
+    height: 260px;
+  }
+
+  .skeleton {
     height: 260px;
   }
 
@@ -495,6 +531,10 @@ select {
   }
 
   .galeria img {
+    height: 300px;
+  }
+
+  .skeleton {
     height: 300px;
   }
 }

@@ -2,13 +2,16 @@
   "name": "STEFY NAIL - Manicura",
   "short_name": "Stefy Nail",
   "description": "Manicura, Pedicura, Cejas y Esculpidas. Reservá tu turno en 1 minuto por WhatsApp.",
-  "version": "5",
+  "version": "6",
+  "id": "./index.html",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#fff5f8",
   "theme_color": "#ff5da2",
   "lang": "es",
+  "categories": ["beauty", "lifestyle"],
   "icons": [
     {
       "src": "logo.png",
@@ -33,6 +36,14 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ]
 }
