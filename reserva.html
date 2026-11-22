@@ -29,11 +29,12 @@
   width: 100%;
 }
 
-/* ENCABEZADO QUE CUBRE TODO */
+/* ENCABEZADO - IMAGEN COMPLETA, SIN RECORTE, RESPONSIVE */
 header {
   padding: 0 !important;
   background: none !important;
   overflow: hidden;
+  width: 100%;
 }
 header::before {
   display: none !important;
@@ -41,14 +42,14 @@ header::before {
 .logo-ancho {
   width: 100% !important;
   max-width: none !important;
-  height: auto;
+  height: auto !important;
   display: block;
   margin: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   padding: 0 !important;
   background: none !important;
-  object-fit: cover;
+  object-fit: contain !important;
 }
 .sub-header {
   text-align: center;
@@ -66,14 +67,12 @@ header::before {
 </head>
 <body>
 
-<!-- ENCABEZADO FULL - IMAGEN CUBRE TODO -->
 <header>
   <a href="index.html">
     <img src="header.png" alt="Stefy Nail - Manicura Pedicura Diseño" class="logo-ancho">
   </a>
 </header>
 
-<!-- TEXTO Y BOTON DEBAJO DE LA IMAGEN -->
 <div class="sub-header">
   <p class="frase">Reservá tu turno fácil y rápido 💖 Elegí servicio, fecha y hora, y confirmalo con la seña.</p>
   <div class="badges">
