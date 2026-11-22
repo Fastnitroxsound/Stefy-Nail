@@ -1,5 +1,5 @@
 // STEFY NAIL - Service Worker - Versión 6 Optimizada
-const CACHE_NAME = 'stefy-nail-v2';
+const CACHE_NAME = 'stefy-nail-v3';
 
 const urlsToCache = [
   './',
