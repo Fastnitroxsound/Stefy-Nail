@@ -140,20 +140,9 @@ header::before {
   <input type="date" id="fecha">
 
   <select id="hora">
-    <option value="">Elegí una hora</option>
-    <option>09:00</option>
-    <option>10:00</option>
-    <option>11:00</option>
-    <option>12:00</option>
-    <option>13:00</option>
-    <option>14:00</option>
-    <option>15:00</option>
-    <option>16:00</option>
-    <option>17:00</option>
-    <option>18:00</option>
-    <option>19:00</option>
-    <option>20:00</option>
+    <option value="">Primero elegí una fecha</option>
   </select>
+  <p id="msgHorario" style="color:#d81b7a; font-size:13px; margin-top:5px;"></p>
 
   <div class="sena-box">
     <span class="sena-emoji">💳</span>
@@ -172,6 +161,35 @@ header::before {
 <script>
 // STEFY NAIL - SOLO RESERVAR
 const SHEET_URL = "PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT";
+
+// AGREGADO - HORARIOS 1H30 - LUN A VIE 9:30 A 19:00 / SAB 9:30 A 14:00
+const fechaInput = document.getElementById('fecha');
+const horaSelect = document.getElementById('hora');
+const msgHorario = document.getElementById('msgHorario');
+fechaInput.min = new Date().toISOString().split('T')[0];
+fechaInput.addEventListener('change', () => {
+  const fecha = new Date(fechaInput.value + 'T12:00:00');
+  const dia = fecha.getDay();
+  horaSelect.innerHTML = '';
+  msgHorario.textContent = '';
+  if (dia === 0) {
+    horaSelect.innerHTML = '<option value="">Cerrado los domingos</option>';
+    msgHorario.textContent = 'Stefy no atiende los domingos 💅';
+    return;
+  }
+  let horarios = [];
+  if (dia === 6) {
+    horarios = ['09:30', '11:00', '12:30'];
+  } else {
+    horarios = ['09:30', '11:00', '12:30', '14:00', '15:30', '17:00'];
+  }
+  horaSelect.innerHTML = '<option value="">Elegí una hora</option>';
+  horarios.forEach(h => {
+    const opt = document.createElement('option');
+    opt.textContent = h;
+    horaSelect.appendChild(opt);
+  });
+});
 
 // AGREGADO - SEÑAS POR SERVICIO - 50% - NO BORRA LO VIEJO
 // 💅 Manos: Simple $12.500, Semi $12.500, Kapping $15.000, Esculpidas $20.000, Softgel $20.000
