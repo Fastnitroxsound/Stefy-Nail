@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="style.css">
 <meta name="theme-color" content="#ff5da2">
 <style>
-/* SOLO PARA ESTA PAGINA */
 .sena-box {
   display: flex; align-items: center; gap: 10px;
   background: #fff0f6;
@@ -28,8 +27,6 @@
   padding: 16px !important;
   width: 100%;
 }
-
-/* ENCABEZADO - IMAGEN COMPLETA, SIN RECORTE, RESPONSIVE */
 header {
   padding: 0 !important;
   background: none !important;
@@ -63,6 +60,35 @@ header::before {
   max-width: 520px;
   line-height: 1.4;
 }
+.spam-limpieza {
+  background: linear-gradient(135deg, #ff5da2, #d81b7a);
+  color: #fff;
+  text-align: center;
+  padding: 14px 15px;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 1.3;
+  animation: spamPulso 1.2s infinite;
+}
+.spam-limpieza small {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: .95;
+  margin-top: 2px;
+}
+@keyframes spamPulso {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+/* AGREGADO - SEPARAR BARRA DE LOS BOTONES */
+.sub-header {
+  padding-bottom: 18px !important;
+}
+.spam-limpieza {
+  margin-top: 18px !important;
+}
 </style>
 </head>
 <body>
@@ -85,6 +111,11 @@ header::before {
   </div>
 </div>
 
+<div class="spam-limpieza">
+  ✨ PRÓXIMAMENTE LIMPIEZA FACIAL ✨
+  <small>Se viene algo hermoso para tu piel 💖 Estate atenta</small>
+</div>
+
 <section id="turno">
   <h2>📅 Reservar Turno</h2>
   <p id="msgTurno" class="msg-turno"></p>
@@ -94,12 +125,16 @@ header::before {
   <input type="tel" id="telefono" placeholder="Tu WhatsApp / Teléfono" autocomplete="tel" inputmode="tel">
 
   <select id="servicio">
-    <option>Manicura Semipermanente - $12.000</option>
-    <option>Esculpidas en Gel - $18.000</option>
-    <option>Pedicura Completa - $14.000</option>
-    <option>Perfilado de Cejas - $6.000</option>
-    <option>Retiro + Manicura - $8.000</option>
-    <option>Diseño Personalizado - Consultar</option>
+    <option>Manicura Simple - $25.000</option>
+    <option>Manicura Semipermanente - $25.000</option>
+    <option>Kapping - $30.000</option>
+    <option>Esculpidas - $40.000</option>
+    <option>Softgel - $40.000</option>
+    <option>Pedicura Sin Esmalte - $25.000</option>
+    <option>Podo Estética Sin Esmalte - $30.000</option>
+    <option>Pedicura Con Esmalte - $30.000</option>
+    <option>Pedicura Con Uñas Esculpidas - $35.000</option>
+    <option>Perfilado de Cejas - $20.000</option>
   </select>
 
   <input type="date" id="fecha">
@@ -122,10 +157,10 @@ header::before {
 
   <div class="sena-box">
     <span class="sena-emoji">💳</span>
-    <span class="sena-texto"><b id="textoSena">Para confirmar tu turno - Seña $6.000</b><small id="textoSenaChico">Es el 50% del servicio • Se descuenta del total</small></span>
+    <span class="sena-texto"><b id="textoSena">Para confirmar tu turno - Seña $12.500</b><small id="textoSenaChico">Es el 50% del servicio • Se descuenta del total</small></span>
   </div>
 
-  <button class="btn-turno btn-pagar" id="btnReservar">Reservar y Pagar Seña $6.000 💳</button>
+  <button class="btn-turno btn-pagar" id="btnReservar">Reservar y Pagar Seña $12.500 💳</button>
   <p class="texto-ayuda">Al reservar se guarda tu turno, se abre WhatsApp y Mercado Pago para pagar la seña.</p>
 </section>
 
@@ -137,14 +172,45 @@ header::before {
 <script>
 // STEFY NAIL - SOLO RESERVAR
 const SHEET_URL = "PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT";
-const MP_SENA = "https://link.mercadopago.com.ar/stefynail1";
+
+// AGREGADO - SEÑAS POR SERVICIO - 50% - NO BORRA LO VIEJO
+// 💅 Manos: Simple $12.500, Semi $12.500, Kapping $15.000, Esculpidas $20.000, Softgel $20.000
+// 🦶 Pies: Pedicura Sin Esmalte $12.500, Podo $15.000, Pedicura Con Esmalte $15.000, Pedicura Con Esculpidas $17.500
+// ✨ Cejas: Perfilado $10.000
+// ❌ Diseño desde $3.000 NO va en reserva, solo en Index
+const MP_POR_SERVICIO = {
+  "Manicura Simple": "https://mpago.la/27Ka33S",
+  "Manicura Semipermanente": "https://mpago.la/27Ka33S",
+  "Kapping": "https://mpago.la/1h28cta",
+  "Esculpidas": "https://mpago.la/2EhLaXn",
+  "Softgel": "https://mpago.la/2EhLaXn",
+  "Pedicura Sin Esmalte": "https://mpago.la/27Ka33S",
+  "Podo Estética Sin Esmalte": "https://mpago.la/1h28cta",
+  "Pedicura Con Esmalte": "https://mpago.la/1h28cta",
+  "Pedicura Con Uñas Esculpidas": "https://mpago.la/2uKKaXZ",
+  "Perfilado de Cejas": "https://mpago.la/1eS7PZw"
+};
+
+// LINKS DE SEÑA POR MONTO - 50% DEL SERVICIO - QUEDA COMO RESPALDO
+const MP_LINKS = {
+  10000: "https://mpago.la/1eS7PZw",
+  12500: "https://mpago.la/27Ka33S",
+  15000: "https://mpago.la/1h28cta",
+  17500: "https://mpago.la/2uKKaXZ",
+  20000: "https://mpago.la/2EhLaXn"
+};
 
 const PRECIOS = {
-  "Manicura Semipermanente": 12000,
-  "Esculpidas en Gel": 18000,
-  "Pedicura Completa": 14000,
-  "Perfilado de Cejas": 6000,
-  "Retiro + Manicura": 8000
+  "Manicura Simple": 25000,
+  "Manicura Semipermanente": 25000,
+  "Kapping": 30000,
+  "Esculpidas": 40000,
+  "Softgel": 40000,
+  "Pedicura Sin Esmalte": 25000,
+  "Podo Estética Sin Esmalte": 30000,
+  "Pedicura Con Esmalte": 30000,
+  "Pedicura Con Uñas Esculpidas": 35000,
+  "Perfilado de Cejas": 20000
 };
 
 function formatear(n) {
@@ -157,16 +223,24 @@ function calcularSena() {
   for (const nombre in PRECIOS) {
     if (servicio.includes(nombre)) { precio = PRECIOS[nombre]; break; }
   }
-  if (precio === null) return 10000;
+  if (precio === null) return 12500;
   return Math.round(precio * 0.5);
+}
+
+// AGREGADO - BUSCA LINK POR SERVICIO PRIMERO, SI NO LO ENCUENTRA USA POR MONTO
+function linkDeSena(sena, servicioTexto) {
+  if (servicioTexto) {
+    for (const nombre in MP_POR_SERVICIO) {
+      if (servicioTexto.includes(nombre)) return MP_POR_SERVICIO[nombre];
+    }
+  }
+  return MP_LINKS[sena] || MP_LINKS[12500];
 }
 
 function actualizarSena() {
   const sena = calcularSena();
-  const servicio = document.getElementById('servicio').value;
-  const esConsultar = servicio.includes('Consultar');
   document.getElementById('textoSena').textContent = "Para confirmar tu turno - Seña " + formatear(sena);
-  document.getElementById('textoSenaChico').textContent = esConsultar ? "Se descuenta del total • El precio se coordina con Stefy" : "Es el 50% del servicio • Se descuenta del total";
+  document.getElementById('textoSenaChico').textContent = "Es el 50% del servicio • Se descuenta del total";
   document.getElementById('btnReservar').textContent = "Reservar y Pagar Seña " + formatear(sena) + " 💳";
   return sena;
 }
@@ -186,6 +260,7 @@ async function reservar() {
   let h = document.getElementById('hora').value || 'a coordinar';
   let msgEl = document.getElementById('msgTurno');
   let sena = calcularSena();
+  let linkPago = linkDeSena(sena, s);
   let textoPago = 'Seña ' + formatear(sena) + ' por Mercado Pago - 50% del servicio';
 
   if (!n) { alert('Escribí tu nombre 💖'); return; }
@@ -212,7 +287,7 @@ async function reservar() {
   window.open('https://wa.me/5491151173182?text=' + encodeURIComponent(msg), '_blank');
 
   setTimeout(() => {
-    window.open(MP_SENA, '_blank');
+    window.open(linkPago, '_blank');
   }, 500);
 }
 </script>

@@ -4,16 +4,13 @@
   box-sizing: border-box;
   font-family: 'Segoe UI', sans-serif;
 }
-
 body {
   background: #fff5f8;
   color: #333;
 }
-
 html {
   scroll-behavior: smooth;
 }
-
 header {
   background: linear-gradient(135deg, #fff0f6 0%, #ffe8f1 40%, #ffd0e2 100%);
   text-align: center;
@@ -21,7 +18,6 @@ header {
   position: relative;
   overflow: hidden;
 }
-
 header::before {
   content: "💅 ✨ 🌸 💖 ✨ 💅 ✨ 🌸 💖";
   position: absolute;
@@ -32,7 +28,6 @@ header::before {
   opacity: .25;
   letter-spacing: 8px;
 }
-
 .logo {
   width: 100%;
   max-width: 320px;
@@ -44,17 +39,14 @@ header::before {
   padding: 12px;
   border-radius: 28px;
   box-shadow: 0 10px 30px rgba(255, 93, 162, .25);
-  /* OPTIMIZADO: el logo no se pixela ni salta */
   object-fit: contain;
 }
-
 header .sub {
   margin: 8px 0 0;
   color: #7a2b4d;
   font-size: 15px;
   font-weight: 600;
 }
-
 header .frase {
   margin: 6px auto 0;
   color: #a85a7d;
@@ -62,7 +54,6 @@ header .frase {
   max-width: 520px;
   line-height: 1.4;
 }
-
 .badges {
   display: flex;
   justify-content: center;
@@ -70,7 +61,6 @@ header .frase {
   flex-wrap: wrap;
   margin-top: 14px;
 }
-
 .badges span {
   background: #fff;
   border: 1px solid #ffd0e2;
@@ -80,7 +70,6 @@ header .frase {
   font-weight: 600;
   color: #d81b7a;
 }
-
 .btn-header {
   display: flex;
   gap: 10px;
@@ -88,7 +77,6 @@ header .frase {
   flex-wrap: wrap;
   margin-top: 16px;
 }
-
 .btn-header a {
   text-decoration: none;
   padding: 12px 22px;
@@ -96,31 +84,26 @@ header .frase {
   font-weight: bold;
   font-size: 14px;
 }
-
 .btn-rosa {
   background: #ff5da2;
   color: #fff;
   box-shadow: 0 6px 18px rgba(255, 93, 162, .35);
 }
-
 .btn-blanco {
   background: #fff;
   color: #d81b7a;
   border: 2px solid #ff5da2;
 }
-
 section {
   padding: 28px 20px;
   max-width: 520px;
   margin: auto;
 }
-
 h2 {
   font-size: 22px;
   margin-bottom: 15px;
   color: #d81b7a;
 }
-
 .card {
   background: #fff;
   border-radius: 20px;
@@ -131,18 +114,13 @@ h2 {
   justify-content: space-between;
   align-items: center;
 }
-
-.card b {
-  font-size: 16px;
-}
-
+.card b { font-size: 16px; }
 .card span {
   font-size: 13px;
   color: #888;
   display: block;
   margin-top: 3px;
 }
-
 .precio {
   font-size: 17px;
   font-weight: bold;
@@ -151,28 +129,20 @@ h2 {
   margin-left: 10px;
   text-align: right;
 }
-
 .galeria {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
 }
-
 .galeria img {
   width: 100%;
   height: 140px;
   object-fit: cover;
   border-radius: 16px;
   cursor: pointer;
-  /* OPTIMIZADO: la imagen aparece suave, no de golpe */
   animation: aparecer .4s ease both;
 }
-
-.galeria img:hover {
-  transform: scale(1.03);
-}
-
-/* OPTIMIZADO: Skeleton - cuadritos rosas que se ven mientras carga la foto */
+.galeria img:hover { transform: scale(1.03); }
 .skeleton {
   width: 100%;
   height: 140px;
@@ -181,17 +151,14 @@ h2 {
   background-size: 200% 100%;
   animation: brillo 1.2s infinite;
 }
-
 @keyframes brillo {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
-
 @keyframes aparecer {
   from { opacity: 0; transform: scale(.96); }
   to { opacity: 1; transform: scale(1); }
 }
-
 .btn-vermas {
   width: 100%;
   margin-top: 14px;
@@ -204,43 +171,27 @@ h2 {
   font-size: 15px;
   cursor: pointer;
 }
-
-.btn-vermas:hover {
-  background: #ff5da2;
-  color: #fff;
-}
-
+.btn-vermas:hover { background: #ff5da2; color: #fff; }
 .horario {
   background: #ffe8f1;
   border-radius: 20px;
   padding: 18px;
   text-align: center;
 }
-
-.horario p {
-  margin: 4px 0;
-  font-size: 14px;
-}
-
+.horario p { margin: 4px 0; font-size: 14px; }
 footer {
   text-align: center;
   padding: 20px;
   font-size: 12px;
   color: #aaa;
 }
-
 footer a {
   font-size: 11px;
   color: #aaa;
   text-decoration: none;
   opacity: .8;
 }
-
-footer a:hover {
-  text-decoration: underline;
-  color: #d81b7a;
-}
-
+footer a:hover { text-decoration: underline; color: #d81b7a; }
 .version {
   margin-top: 6px;
   font-size: 11px;
@@ -248,9 +199,7 @@ footer a:hover {
   opacity: .6;
   font-weight: 600;
 }
-
-input,
-select {
+input, select {
   width: 100%;
   padding: 13px;
   border-radius: 12px;
@@ -259,7 +208,6 @@ select {
   font-size: 15px;
   outline: none;
 }
-
 .btn-turno {
   width: 100%;
   padding: 14px;
@@ -271,7 +219,6 @@ select {
   font-size: 16px;
   cursor: pointer;
 }
-
 .msg-turno {
   display: none;
   text-align: center;
@@ -280,21 +227,18 @@ select {
   margin-bottom: 10px;
   font-weight: 600;
 }
-
 .texto-ayuda {
   text-align: center;
   font-size: 13px;
   color: #888;
   margin-top: 10px;
 }
-
 .texto-biblio {
   max-width: 900px;
   margin: 0 auto 15px;
   color: #888;
   font-size: 14px;
 }
-
 .lightbox {
   display: none;
   position: fixed;
@@ -305,11 +249,7 @@ select {
   align-items: center;
   flex-direction: column;
 }
-
-.lightbox.abierto {
-  display: flex;
-}
-
+.lightbox.abierto { display: flex; }
 .lightbox img {
   max-width: 92vw;
   max-height: 82vh;
@@ -317,22 +257,15 @@ select {
   border-radius: 14px;
   cursor: zoom-in;
   transition: transform .3s;
-  /* OPTIMIZADO: no carga gigante, se adapta */
   will-change: transform;
 }
-
-.lightbox img.zoom {
-  transform: scale(2);
-  cursor: zoom-out;
-}
-
+.lightbox img.zoom { transform: scale(2); cursor: zoom-out; }
 .lightbox .contador {
   color: #fff;
   margin-top: 12px;
   font-size: 14px;
   opacity: .8;
 }
-
 .cerrar {
   position: absolute;
   top: 15px;
@@ -347,7 +280,6 @@ select {
   cursor: pointer;
   z-index: 1000;
 }
-
 .flecha {
   position: absolute;
   top: 50%;
@@ -361,19 +293,9 @@ select {
   font-size: 24px;
   cursor: pointer;
 }
-
-.flecha:hover {
-  background: #ff5da2;
-}
-
-.prev {
-  left: 12px;
-}
-
-.next {
-  right: 12px;
-}
-
+.flecha:hover { background: #ff5da2; }
+.prev { left: 12px; }
+.next { right: 12px; }
 .biblioteca {
   display: none;
   position: fixed;
@@ -382,14 +304,9 @@ select {
   z-index: 998;
   overflow-y: auto;
   padding: 20px 15px 40px;
-  /* OPTIMIZADO: scroll más suave en celu */
   -webkit-overflow-scrolling: touch;
 }
-
-.biblioteca.abierta {
-  display: block;
-}
-
+.biblioteca.abierta { display: block; }
 .biblioteca-header {
   max-width: 900px;
   margin: auto;
@@ -403,11 +320,7 @@ select {
   padding: 10px 0;
   z-index: 10;
 }
-
-.biblioteca-header h2 {
-  margin: 0;
-}
-
+.biblioteca-header h2 { margin: 0; }
 .btn-cerrar-biblio {
   background: #ff5da2;
   color: #fff;
@@ -417,17 +330,14 @@ select {
   font-weight: bold;
   cursor: pointer;
 }
-
 .biblio-grid {
   max-width: 900px;
   margin: auto;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
-  /* OPTIMIZADO: el navegador solo renderiza lo que se ve */
   content-visibility: auto;
 }
-
 .biblio-grid img {
   width: 100%;
   height: 150px;
@@ -436,53 +346,21 @@ select {
   cursor: pointer;
   animation: aparecer .4s ease both;
 }
-
 @media (min-width: 768px) {
-  header {
-    padding: 35px 20px 40px;
-  }
-
-  .logo {
-    max-width: 360px;
-  }
-
-  header .frase {
-    font-size: 14px;
-  }
-
-  section {
-    max-width: 900px;
-    padding: 35px 30px;
-  }
-
-  h2 {
-    font-size: 26px;
-  }
-
+  header { padding: 35px 20px 40px; }
+  .logo { max-width: 360px; }
+  header .frase { font-size: 14px; }
+  section { max-width: 900px; padding: 35px 30px; }
+  h2 { font-size: 26px; }
   .precios-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px;
   }
-
-  .precios-grid .card {
-    margin-bottom: 0;
-  }
-
-  .galeria {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-
-  .galeria img {
-    height: 260px;
-  }
-
-  .skeleton {
-    height: 260px;
-  }
-
-  /* ARREGLADO - SOLO LO DE ABAJO EN PC */
+  .precios-grid .card { margin-bottom: 0; }
+  .galeria { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .galeria img { height: 260px; }
+  .skeleton { height: 260px; }
   .fila-pc {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -492,60 +370,24 @@ select {
     margin: 0 auto;
     padding: 0 30px 35px;
   }
-
-  .fila-pc section {
-    padding: 0;
-    max-width: none;
-    margin: 0;
-    width: 100%;
-  }
-
+  .fila-pc section { padding: 0; max-width: none; margin: 0; width: 100%; }
   .horario {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-
-  .flecha {
-    width: 56px;
-    height: 56px;
-    font-size: 28px;
-  }
-
-  .prev {
-    left: 30px;
-  }
-
-  .next {
-    right: 30px;
-  }
-
-  .biblio-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
-
-  .biblio-grid img {
-    height: 220px;
-  }
+  .flecha { width: 56px; height: 56px; font-size: 28px; }
+  .prev { left: 30px; }
+  .next { right: 30px; }
+  .biblio-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .biblio-grid img { height: 220px; }
 }
-
 @media (min-width: 1100px) {
-  section {
-    max-width: 1050px;
-  }
-
-  .galeria img {
-    height: 300px;
-  }
-
-  .skeleton {
-    height: 300px;
-  }
+  section { max-width: 1050px; }
+  .galeria img { height: 300px; }
+  .skeleton { height: 300px; }
 }
-
-/* NUEVO - PAGO MERCADO PAGO - AGREGADO POR ISMAEL - NO TOCA NADA DE ARRIBA */
 #tipoPago {
   border: 2px solid #ff5da2;
   background: #fff0f6;
@@ -553,8 +395,6 @@ select {
   color: #7a2b4d;
   cursor: pointer;
 }
-
-/* NUEVO - BOTON AL FONDO - ABAJO DE HORARIOS - NO TOCA NADA DE ARRIBA */
 .btn-fondo {
   display: block;
   text-align: center;

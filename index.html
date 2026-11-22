@@ -9,15 +9,89 @@
 <meta name="theme-color" content="#ff5da2">
 
 <!-- OPTIMIZADO: Logo carga primero, CSS no bloquea -->
-<link rel="preload" as="image" href="logo.png" fetchpriority="high">
+<link rel="preload" as="image" href="header.png" fetchpriority="high">
 <link rel="preload" as="style" href="style.css">
 <link rel="stylesheet" href="style.css">
+<style>
+/* SOLO PARA ESTA PAGINA - PARTE DE ARRIBA IGUAL A RESERVA */
+header {
+  padding: 0 !important;
+  background: none !important;
+  overflow: hidden;
+  width: 100%;
+}
+header::before {
+  display: none !important;
+}
+.logo-ancho {
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  display: block;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  background: none !important;
+  object-fit: contain !important;
+}
+.sub-header {
+  text-align: center;
+  padding: 16px 15px 0;
+  background: #fff5f8;
+}
+.sub-header .sub {
+  margin: 8px 0 0;
+  color: #7a2b4d;
+  font-size: 15px;
+  font-weight: 600;
+}
+.sub-header .frase {
+  margin: 6px auto 0;
+  color: #a85a7d;
+  font-size: 13px;
+  max-width: 520px;
+  line-height: 1.4;
+}
+/* SPAM - PROXIMAMENTE LIMPIEZA FACIAL */
+.spam-limpieza {
+  background: linear-gradient(135deg, #ff5da2, #d81b7a);
+  color: #fff;
+  text-align: center;
+  padding: 14px 15px;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 1.3;
+  animation: spamPulso 1.2s infinite;
+}
+.spam-limpieza small {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: .95;
+  margin-top: 2px;
+}
+@keyframes spamPulso {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+/* AGREGADO - SEPARAR BARRA DE LOS BOTONES */
+.sub-header {
+  padding-bottom: 18px !important;
+}
+.spam-limpieza {
+  margin-top: 18px !important;
+}
+</style>
 </head>
 <body>
 
 <header>
-  <!-- OPTIMIZADO: width/height + fetchpriority para que no salte el layout -->
-  <img src="logo.png" alt="Stefy Nail Logo" class="logo" width="320" height="320" fetchpriority="high" decoding="async">
+  <img src="header.png" alt="Stefy Nail - Manicura Pedicura Diseño" class="logo-ancho" width="1080" height="1080" fetchpriority="high" decoding="async">
+</header>
+
+<div class="sub-header">
   <p class="sub">Manicura • Pedicura • Cejas • Esculpidas</p>
   <p class="frase">Tus manos hablan de vos. Cuidalas con el amor que merecen 💅✨</p>
   <div class="badges">
@@ -29,23 +103,33 @@
     <a href="reserva.html" class="btn-rosa">Reservar Turno 💅</a>
     <a href="#trabajos" class="btn-blanco">Ver Trabajos</a>
   </div>
-</header>
+</div>
+
+<div class="spam-limpieza">
+  ✨ PRÓXIMAMENTE LIMPIEZA FACIAL ✨
+  <small>Se viene algo hermoso para tu piel 💖 Estate atenta</small>
+</div>
 
 <section id="precios">
   <h2>💅 Precios</h2>
   <div class="precios-grid">
-    <div class="card"><div><b>Manicura Semipermanente</b><span>Esmaltado + Manicura Rusa</span></div><div class="precio">$12.000</div></div>
-    <div class="card"><div><b>Esculpidas en Gel</b><span>Extensión + Diseño</span></div><div class="precio">$18.000</div></div>
-    <div class="card"><div><b>Pedicura Completa</b><span>Pedicura + Semipermanente</span></div><div class="precio">$14.000</div></div>
-    <div class="card"><div><b>Perfilado de Cejas</b><span>Diseño + Perfilado</span></div><div class="precio">$6.000</div></div>
-    <div class="card"><div><b>Retiro + Manicura</b><span>Retiro + Cuidado</span></div><div class="precio">$8.000</div></div>
-    <div class="card"><div><b>Diseño Personalizado</b><span>Nail Art + 3D</span></div><div class="precio">Consultar</div></div>
+    <div class="card"><div><b>Manicura Simple</b><span>Manicura clásica</span></div><div class="precio">$25.000</div></div>
+    <div class="card"><div><b>Manicura Semipermanente</b><span>Esmaltado + Manicura Rusa</span></div><div class="precio">$25.000</div></div>
+    <div class="card"><div><b>Kapping</b><span>Refuerzo + Esmaltado</span></div><div class="precio">$30.000</div></div>
+    <div class="card"><div><b>Esculpidas</b><span>Extensión + Diseño</span></div><div class="precio">$40.000</div></div>
+    <div class="card"><div><b>Diseño</b><span>Nail Art + 3D</span></div><div class="precio">Desde $3.000</div></div>
+    <div class="card"><div><b>Softgel</b><span>Extensión Softgel</span></div><div class="precio">$40.000</div></div>
+    <div class="card"><div><b>Pedicura Sin Esmalte</b><span>Pedicura completa</span></div><div class="precio">$25.000</div></div>
+    <div class="card"><div><b>Podo Estética Sin Esmalte</b><span>Podo Estética</span></div><div class="precio">$30.000</div></div>
+    <div class="card"><div><b>Pedicura Con Esmalte</b><span>Pedicura + Esmaltado</span></div><div class="precio">$30.000</div></div>
+    <div class="card"><div><b>Pedicura Con Uñas Esculpidas</b><span>Pedicura + Esculpidas</span></div><div class="precio">$35.000</div></div>
+    <div class="card"><div><b>Perfilado de Cejas</b><span>Diseño + Perfilado</span></div><div class="precio">$20.000</div></div>
+    <div class="card"><div><b>✨ Limpieza Facial</b><span>Próximamente</span></div><div class="precio">Próximamente</div></div>
   </div>
 </section>
 
 <section id="trabajos">
   <h2>✨ Mis Trabajos</h2>
-  <!-- OPTIMIZADO: Skeleton mientras cargan las fotos, no se ve en blanco -->
   <div class="galeria" id="galeria">
     <div class="skeleton"></div>
     <div class="skeleton"></div>
@@ -67,7 +151,6 @@
     <p><b>Domingo</b></p>
     <p>Cerrado</p>
   </div>
-  <!-- NUEVO - BOTON AL FONDO - ABAJO DE HORARIOS -->
   <a href="reserva.html" class="btn-fondo">Reservar Turno 💅</a>
 </section>
 
@@ -77,7 +160,6 @@
   <p class="version">Versión 6 - Optimizada</p>
 </footer>
 
-<!-- Lightbox -->
 <div class="lightbox" id="lightbox">
   <button class="cerrar" id="btnCerrar">✕</button>
   <button class="flecha prev" id="btnPrev">‹</button>
@@ -86,7 +168,6 @@
   <div class="contador" id="contador"></div>
 </div>
 
-<!-- Biblioteca -->
 <div class="biblioteca" id="biblioteca">
   <div class="biblioteca-header">
     <h2>📸 Biblioteca Completa</h2>
@@ -96,7 +177,6 @@
   <div class="biblio-grid" id="biblioGrid"></div>
 </div>
 
-<!-- OPTIMIZADO: defer para que el JS no frene la carga de la página -->
 <script src="script.js" defer></script>
 </body>
 </html>
