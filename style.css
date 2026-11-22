@@ -482,16 +482,22 @@ select {
     height: 260px;
   }
 
+  /* ARREGLADO - SOLO LO DE ABAJO EN PC */
   .fila-pc {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    align-items: start;
+    align-items: stretch;
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 0 30px 35px;
   }
 
   .fila-pc section {
     padding: 0;
     max-width: none;
+    margin: 0;
+    width: 100%;
   }
 
   .horario {
@@ -537,4 +543,28 @@ select {
   .skeleton {
     height: 300px;
   }
+}
+
+/* NUEVO - PAGO MERCADO PAGO - AGREGADO POR ISMAEL - NO TOCA NADA DE ARRIBA */
+#tipoPago {
+  border: 2px solid #ff5da2;
+  background: #fff0f6;
+  font-weight: 700;
+  color: #7a2b4d;
+  cursor: pointer;
+}
+
+/* NUEVO - BOTON AL FONDO - ABAJO DE HORARIOS - NO TOCA NADA DE ARRIBA */
+.btn-fondo {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  background: #ff5da2;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 14px 22px;
+  border-radius: 30px;
+  margin-top: 16px;
+  box-shadow: 0 6px 18px rgba(255, 93, 162, .35);
 }

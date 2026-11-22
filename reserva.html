@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reservar Turno - Stefy Nail</title>
+<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#ff5da2">
+<style>
+/* SOLO PARA ESTA PAGINA */
+.sena-box {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff0f6;
+  border: 2px dashed #ff5da2;
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin: 12px 0;
+  text-align: left;
+}
+.sena-emoji { font-size: 24px; }
+.sena-texto { display: flex; flex-direction: column; line-height: 1.2; }
+.sena-texto b { font-size: 14px; color: #d81b7a; }
+.sena-texto small { font-size: 12px; color: #888; margin-top: 2px; }
+.btn-pagar {
+  background: linear-gradient(135deg, #ff5da2, #d81b7a) !important;
+  box-shadow: 0 8px 20px rgba(255, 93, 162, .35) !important;
+  font-size: 17px !important;
+  padding: 16px !important;
+  width: 100%;
+}
+
+/* ENCABEZADO QUE CUBRE TODO */
+header {
+  padding: 0 !important;
+  background: none !important;
+  overflow: hidden;
+}
+header::before {
+  display: none !important;
+}
+.logo-ancho {
+  width: 100% !important;
+  max-width: none !important;
+  height: auto;
+  display: block;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  background: none !important;
+  object-fit: cover;
+}
+.sub-header {
+  text-align: center;
+  padding: 16px 15px 0;
+  background: #fff5f8;
+}
+.sub-header .frase {
+  margin: 6px auto 0;
+  color: #a85a7d;
+  font-size: 13px;
+  max-width: 520px;
+  line-height: 1.4;
+}
+</style>
+</head>
+<body>
+
+<!-- ENCABEZADO FULL - IMAGEN CUBRE TODO -->
+<header>
+  <a href="index.html">
+    <img src="header.png" alt="Stefy Nail - Manicura Pedicura Diseño" class="logo-ancho">
+  </a>
+</header>
+
+<!-- TEXTO Y BOTON DEBAJO DE LA IMAGEN -->
+<div class="sub-header">
+  <p class="frase">Reservá tu turno fácil y rápido 💖 Elegí servicio, fecha y hora, y confirmalo con la seña.</p>
+  <div class="badges">
+    <span>💅 Semi</span>
+    <span>✨ Esculpidas</span>
+    <span>🌸 Cejas</span>
+  </div>
+  <div class="btn-header">
+    <a href="index.html" class="btn-blanco">← Volver al Inicio</a>
+  </div>
+</div>
+
+<section id="turno">
+  <h2>📅 Reservar Turno</h2>
+  <p id="msgTurno" class="msg-turno"></p>
+
+  <input type="text" id="nombre" placeholder="Tu nombre" autocomplete="given-name">
+  <input type="text" id="apellido" placeholder="Tu apellido" autocomplete="family-name">
+  <input type="tel" id="telefono" placeholder="Tu WhatsApp / Teléfono" autocomplete="tel" inputmode="tel">
+
+  <select id="servicio">
+    <option>Manicura Semipermanente - $12.000</option>
+    <option>Esculpidas en Gel - $18.000</option>
+    <option>Pedicura Completa - $14.000</option>
+    <option>Perfilado de Cejas - $6.000</option>
+    <option>Retiro + Manicura - $8.000</option>
+    <option>Diseño Personalizado - Consultar</option>
+  </select>
+
+  <input type="date" id="fecha">
+
+  <select id="hora">
+    <option value="">Elegí una hora</option>
+    <option>09:00</option>
+    <option>10:00</option>
+    <option>11:00</option>
+    <option>12:00</option>
+    <option>13:00</option>
+    <option>14:00</option>
+    <option>15:00</option>
+    <option>16:00</option>
+    <option>17:00</option>
+    <option>18:00</option>
+    <option>19:00</option>
+    <option>20:00</option>
+  </select>
+
+  <div class="sena-box">
+    <span class="sena-emoji">💳</span>
+    <span class="sena-texto"><b id="textoSena">Para confirmar tu turno - Seña $6.000</b><small id="textoSenaChico">Es el 50% del servicio • Se descuenta del total</small></span>
+  </div>
+
+  <button class="btn-turno btn-pagar" id="btnReservar">Reservar y Pagar Seña $6.000 💳</button>
+  <p class="texto-ayuda">Al reservar se guarda tu turno, se abre WhatsApp y Mercado Pago para pagar la seña.</p>
+</section>
+
+<footer>
+  <p>© 2026 Stefy Nail - Todos los derechos reservados</p>
+  <p><a href="index.html">Volver al inicio</a></p>
+</footer>
+
+<script>
+// STEFY NAIL - SOLO RESERVAR
+const SHEET_URL = "PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT";
+const MP_SENA = "https://link.mercadopago.com.ar/stefynail1";
+
+const PRECIOS = {
+  "Manicura Semipermanente": 12000,
+  "Esculpidas en Gel": 18000,
+  "Pedicura Completa": 14000,
+  "Perfilado de Cejas": 6000,
+  "Retiro + Manicura": 8000
+};
+
+function formatear(n) {
+  return "$" + n.toLocaleString("es-AR");
+}
+
+function calcularSena() {
+  const servicio = document.getElementById('servicio').value;
+  let precio = null;
+  for (const nombre in PRECIOS) {
+    if (servicio.includes(nombre)) { precio = PRECIOS[nombre]; break; }
+  }
+  if (precio === null) return 10000;
+  return Math.round(precio * 0.5);
+}
+
+function actualizarSena() {
+  const sena = calcularSena();
+  const servicio = document.getElementById('servicio').value;
+  const esConsultar = servicio.includes('Consultar');
+  document.getElementById('textoSena').textContent = "Para confirmar tu turno - Seña " + formatear(sena);
+  document.getElementById('textoSenaChico').textContent = esConsultar ? "Se descuenta del total • El precio se coordina con Stefy" : "Es el 50% del servicio • Se descuenta del total";
+  document.getElementById('btnReservar').textContent = "Reservar y Pagar Seña " + formatear(sena) + " 💳";
+  return sena;
+}
+
+document.getElementById('servicio').addEventListener('change', actualizarSena);
+actualizarSena();
+
+document.getElementById('btnReservar').addEventListener('click', reservar);
+
+async function reservar() {
+  let n = document.getElementById('nombre').value.trim();
+  let ap = document.getElementById('apellido').value.trim();
+  let nombreCompleto = ap ? n + ' ' + ap : n;
+  let tel = document.getElementById('telefono').value.trim();
+  let s = document.getElementById('servicio').value;
+  let f = document.getElementById('fecha').value || 'a coordinar';
+  let h = document.getElementById('hora').value || 'a coordinar';
+  let msgEl = document.getElementById('msgTurno');
+  let sena = calcularSena();
+  let textoPago = 'Seña ' + formatear(sena) + ' por Mercado Pago - 50% del servicio';
+
+  if (!n) { alert('Escribí tu nombre 💖'); return; }
+  if (!ap) { alert('Escribí tu apellido 💖'); return; }
+  if (!tel) { alert('Escribí tu WhatsApp / teléfono'); return; }
+  if (!document.getElementById('fecha').value) { alert('Elegí una fecha'); return; }
+  if (!document.getElementById('hora').value) { alert('Elegí una hora'); return; }
+
+  try {
+    if (SHEET_URL && !SHEET_URL.includes('PEGAR_AQUI')) {
+      await fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre: nombreCompleto, telefono: tel, servicio: s, fecha: f, hora: h, pago: textoPago })
+      });
+    }
+  } catch (e) { console.log('Error guardando en Excel', e); }
+
+  msgEl.style.display = 'block';
+  msgEl.textContent = '¡Turno guardado! Te abrimos WhatsApp y Mercado Pago 💖';
+
+  let msg = `Hola Stefy! Soy ${nombreCompleto} (${tel}), quiero reservar ${s} para el ${f} a las ${h} 💅 - Pago: ${textoPago}`;
+  window.open('https://wa.me/5491151173182?text=' + encodeURIComponent(msg), '_blank');
+
+  setTimeout(() => {
+    window.open(MP_SENA, '_blank');
+  }, 500);
+}
+</script>
+
+</body>
+</html>

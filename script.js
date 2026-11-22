@@ -5,6 +5,10 @@ console.log('Stefy Nail v6 Optimizada');
 const SHEET_URL = "PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT";
 // ==========================================================
 
+// NUEVO - MERCADO PAGO - LINK DE ISMAEL - SEÑA $10.000
+const MP_SENA = "https://link.mercadopago.com.ar/stefynail1";
+// ==========================================================
+
 let principales = [];
 let biblioteca = [];
 let listaActual = [];
@@ -26,21 +30,33 @@ function existeImagen(src) {
 }
 
 async function cargarFotos() {
-  // OPTIMIZADO ANTES: revisaba 1 por 1 y tardaba 5+ seg
-  // AHORA: revisa las 100 en paralelo, tarda menos de 1 seg
+  // ARREGLO: busca .jpeg, .jpg, .png y .webp, no solo .jpeg
+  const extensiones = ['jpeg', 'jpg', 'png', 'webp'];
   const promesas = [];
   for (let i = 1; i <= 100; i++) {
-    const src = `trabajo${i}.jpeg`;
-    promesas.push(existeImagen(src).then(existe => existe ? src : null));
+    for (const ext of extensiones) {
+      const src = `trabajo${i}.${ext}`;
+      promesas.push(existeImagen(src).then(existe => existe ? src : null));
+    }
   }
   const resultados = await Promise.all(promesas);
-  const encontradas = resultados.filter(Boolean);
+  // Quita duplicados por si hay trabajo1.jpg y trabajo1.jpeg
+  const vistas = new Set();
+  const encontradas = [];
+  for (const src of resultados) {
+    if (!src) continue;
+    const base = src.split('.')[0];
+    if (vistas.has(base)) continue;
+    vistas.add(base);
+    encontradas.push(src);
+  }
 
   principales = encontradas.slice(0, 6);
   biblioteca = encontradas.slice(6);
 
   // OPTIMIZADO: solo carga las 6 primeras ya, el resto con lazy
   const galeria = document.getElementById('galeria');
+  if (!galeria) return;
   galeria.innerHTML = '';
   principales.forEach((src, i) => {
     const im = document.createElement('img');
@@ -58,13 +74,15 @@ async function cargarFotos() {
 
   // OPTIMIZADO: la biblioteca NO se crea hasta que la abrís
   // Así no carga 100 fotos de gusto al entrar
-  if (biblioteca.length === 0) {
-    document.getElementById('btnVerMas').style.display = 'none';
+  const btnVerMas = document.getElementById('btnVerMas');
+  if (biblioteca.length === 0 && btnVerMas) {
+    btnVerMas.style.display = 'none';
   }
 }
 
 function crearBiblioteca() {
   const grid = document.getElementById('biblioGrid');
+  if (!grid) return;
   if (grid.dataset.cargada === 'si') return;
   grid.dataset.cargada = 'si';
   grid.innerHTML = '';
@@ -117,46 +135,71 @@ function cerrar() {
   document.body.style.overflow = '';
 }
 
-document.getElementById('galeria').addEventListener('click', function (e) {
-  const img = e.target.closest('img');
-  if (!img) return;
-  abrir(parseInt(img.dataset.index), principales);
-});
+const galeriaEl = document.getElementById('galeria');
+if (galeriaEl) {
+  galeriaEl.addEventListener('click', function (e) {
+    const img = e.target.closest('img');
+    if (!img) return;
+    abrir(parseInt(img.dataset.index), principales);
+  });
+}
 
-document.getElementById('btnVerMas').addEventListener('click', function () {
-  crearBiblioteca(); // recién acá crea las fotos de la biblioteca
-  document.getElementById('biblioteca').classList.add('abierta');
-  document.body.style.overflow = 'hidden';
-  window.scrollTo(0, 0);
-});
+const btnVerMasEl = document.getElementById('btnVerMas');
+if (btnVerMasEl) {
+  btnVerMasEl.addEventListener('click', function () {
+    crearBiblioteca(); // recién acá crea las fotos de la biblioteca
+    document.getElementById('biblioteca').classList.add('abierta');
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+  });
+}
 
-document.getElementById('btnCerrarBiblio').addEventListener('click', function () {
-  document.getElementById('biblioteca').classList.remove('abierta');
-  document.body.style.overflow = '';
-});
+const btnCerrarBiblioEl = document.getElementById('btnCerrarBiblio');
+if (btnCerrarBiblioEl) {
+  btnCerrarBiblioEl.addEventListener('click', function () {
+    document.getElementById('biblioteca').classList.remove('abierta');
+    document.body.style.overflow = '';
+  });
+}
 
-document.getElementById('btnCerrar').addEventListener('click', cerrar);
+const btnCerrarEl = document.getElementById('btnCerrar');
+if (btnCerrarEl) btnCerrarEl.addEventListener('click', cerrar);
 
-document.getElementById('btnPrev').addEventListener('click', function (e) {
-  e.stopPropagation();
-  cambiar(-1);
-});
+const btnPrevEl = document.getElementById('btnPrev');
+if (btnPrevEl) {
+  btnPrevEl.addEventListener('click', function (e) {
+    e.stopPropagation();
+    cambiar(-1);
+  });
+}
 
-document.getElementById('btnNext').addEventListener('click', function (e) {
-  e.stopPropagation();
-  cambiar(1);
-});
+const btnNextEl = document.getElementById('btnNext');
+if (btnNextEl) {
+  btnNextEl.addEventListener('click', function (e) {
+    e.stopPropagation();
+    cambiar(1);
+  });
+}
 
-document.getElementById('lightbox').addEventListener('click', function (e) {
-  if (e.target.id === 'lightbox') cerrar();
-});
+const lightboxEl = document.getElementById('lightbox');
+if (lightboxEl) {
+  lightboxEl.addEventListener('click', function (e) {
+    if (e.target.id === 'lightbox') cerrar();
+  });
+}
 
-document.getElementById('fotoGrande').addEventListener('click', function (e) {
-  e.stopPropagation();
-  this.classList.toggle('zoom');
-});
+const fotoGrandeEl = document.getElementById('fotoGrande');
+if (fotoGrandeEl) {
+  fotoGrandeEl.addEventListener('click', function (e) {
+    e.stopPropagation();
+    this.classList.toggle('zoom');
+  });
+}
 
-document.getElementById('btnReservar').addEventListener('click', reservar);
+// ARREGLO: en index.html no existe btnReservar, solo en reserva.html
+// Si no existe, no rompe el script
+const btnReservarEl = document.getElementById('btnReservar');
+if (btnReservarEl) btnReservarEl.addEventListener('click', reservar);
 
 document.addEventListener('keydown', e => {
   if (!document.getElementById('lightbox').classList.contains('abierto')) return;
@@ -175,6 +218,11 @@ async function reservar() {
   let h = document.getElementById('hora').value || 'a coordinar';
   let msgEl = document.getElementById('msgTurno');
 
+  // NUEVO - MERCADO PAGO - LEE QUE PAGO ELIGIO
+  let tipoPagoEl = document.getElementById('tipoPago');
+  let tipoPago = tipoPagoEl ? tipoPagoEl.value : 'local';
+  let textoPago = tipoPago === 'sena' ? 'Seña $10.000 por Mercado Pago' : 'Pago en el local';
+
   if (!n) { alert('Escribí tu nombre 💖'); return; }
   if (!ap) { alert('Escribí tu apellido 💖'); return; }
   if (!tel) { alert('Escribí tu WhatsApp / teléfono'); return; }
@@ -187,7 +235,7 @@ async function reservar() {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre: nombreCompleto, telefono: tel, servicio: s, fecha: f, hora: h })
+        body: JSON.stringify({ nombre: nombreCompleto, telefono: tel, servicio: s, fecha: f, hora: h, pago: textoPago })
       });
     }
   } catch (e) {
@@ -197,8 +245,15 @@ async function reservar() {
   msgEl.style.display = 'block';
   msgEl.textContent = '¡Turno guardado! Te abrimos WhatsApp para confirmarlo 💖';
 
-  let msg = `Hola Stefy! Soy ${nombreCompleto} (${tel}), quiero reservar ${s} para el ${f} a las ${h} 💅`;
+  let msg = `Hola Stefy! Soy ${nombreCompleto} (${tel}), quiero reservar ${s} para el ${f} a las ${h} 💅 - Pago: ${textoPago}`;
   window.open('https://wa.me/5491151173182?text=' + encodeURIComponent(msg), '_blank');
+
+  // NUEVO - MERCADO PAGO - ABRE EL LINK SOLO SI ELIGIO SEÑA
+  if (tipoPago === 'sena') {
+    setTimeout(() => {
+      window.open(MP_SENA, '_blank');
+    }, 500);
+  }
 }
 
 if ('serviceWorker' in navigator) {
