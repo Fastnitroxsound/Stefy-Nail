@@ -168,7 +168,7 @@ header::before {
 
 <script>
 // STEFY NAIL - SOLO RESERVAR
-const SHEET_URL = "PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxNWnoNQLw8t2FRRg8QeDEvsvhbje53OTM_4Ch46jWVHH58zSWNXPxSbkh5ZU0eIaJy/exec";
 
 // AGREGADO - HORARIOS 1H30 - LUN A VIE 9:30 A 19:00 / SAB 9:30 A 14:00
 const fechaInput = document.getElementById('fecha');
@@ -301,20 +301,16 @@ async function reservar() {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre: nombreCompleto, telefono: tel, servicio: s, fecha: f, hora: h, pago: textoPago })
+        body: JSON.stringify({ nombre: n, apellido: ap, telefono: tel, servicio: s, fecha: f, hora: h, pago: textoPago })
       });
     }
   } catch (e) { console.log('Error guardando en Excel', e); }
 
   msgEl.style.display = 'block';
-  msgEl.textContent = '¡Turno guardado! Te abrimos WhatsApp y Mercado Pago 💖';
+  msgEl.innerHTML = '¡Turno guardado! 💖<br><br><a href="' + linkPago + '" target="_blank" style="display:inline-block;background:#ff5da2;color:#fff;padding:14px 22px;border-radius:30px;text-decoration:none;font-weight:bold;">Pagar Seña ' + formatear(sena) + ' 💳</a><br><small>Tocá el botón para pagar por Mercado Pago</small>';
 
   let msg = `Hola Stefy! Soy ${nombreCompleto} (${tel}), quiero reservar ${s} para el ${f} a las ${h} 💅 - Pago: ${textoPago}`;
   window.open('https://wa.me/5491151173182?text=' + encodeURIComponent(msg), '_blank');
-
-  setTimeout(() => {
-    window.open(linkPago, '_blank');
-  }, 500);
 }
 </script>
 
