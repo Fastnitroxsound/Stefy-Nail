@@ -167,14 +167,13 @@ header::before {
 
 <script>
 // STEFY NAIL - SOLO RESERVAR
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxDoY2j5EU-mMZFBXm0LbwiHJcAD67OwdcfxLsJsWcJXXERXWSsp4KQOcHukv_wrjzE/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbx77LwJM0Q_SAn9Er8uwDhie_vF0eBpgLnITDyKi_Aapp-3dyK2nDPZw-8zs7SNviPv/exec";
 
 // AGREGADO - PREGUNTA HORAS OCUPADAS ANTES DE GUARDAR
 async function consultarOcupados(fecha) {
   try {
     const r = await fetch(SHEET_URL + "?fecha=" + encodeURIComponent(fecha));
     const data = await r.json();
-    // Normaliza por si viene 9:30 o 09:30:00
     return (data.ocupados || []).map(h => {
       h = String(h).trim();
       if (h.includes(":")) {
@@ -210,7 +209,6 @@ fechaInput.addEventListener('change', async () => {
   } else {
     horarios = ['09:30', '11:00', '12:30', '14:00', '15:30', '17:00'];
   }
-  // CAMBIADO - SOLO MUESTRA HORAS DISPONIBLES, LAS OCUPADAS NO APARECEN
   const ocupados = await consultarOcupados(fechaInput.value);
   const disponibles = horarios.filter(h => !ocupados.includes(h));
   horaSelect.innerHTML = '<option value="">Elegí una hora</option>';
@@ -317,7 +315,6 @@ async function reservar() {
   if (!document.getElementById('fecha').value) { alert('Elegí una fecha'); return; }
   if (!document.getElementById('hora').value) { alert('Elegí una hora'); return; }
 
-  // DOBLE CHEQUEO ANTES DE GUARDAR, POR SI 2 PERSONAS ENTRAN AL MISMO TIEMPO
   const ocupados = await consultarOcupados(f);
   if (ocupados.includes(h)) {
     alert('Esa hora ya está reservada 💅 Elegí otra hora porfa');
