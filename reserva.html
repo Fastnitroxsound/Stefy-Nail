@@ -170,12 +170,24 @@ header::before {
 // STEFY NAIL - SOLO RESERVAR
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxNWnoNQLw8t2FRRg8QeDEvsvhbje53OTM_4Ch46jWVHH58zSWNXPxSbkh5ZU0eIaJy/exec";
 
+// AGREGADO - PREGUNTA HORAS OCUPADAS ANTES DE GUARDAR
+async function consultarOcupados(fecha) {
+  try {
+    const r = await fetch(SHEET_URL + "?fecha=" + encodeURIComponent(fecha));
+    const data = await r.json();
+    return data.ocupados || [];
+  } catch (e) {
+    console.log('No se pudo consultar ocupados', e);
+    return [];
+  }
+}
+
 // AGREGADO - HORARIOS 1H30 - LUN A VIE 9:30 A 19:00 / SAB 9:30 A 14:00
 const fechaInput = document.getElementById('fecha');
 const horaSelect = document.getElementById('hora');
 const msgHorario = document.getElementById('msgHorario');
 fechaInput.min = new Date().toISOString().split('T')[0];
-fechaInput.addEventListener('change', () => {
+fechaInput.addEventListener('change', async () => {
   const fecha = new Date(fechaInput.value + 'T12:00:00');
   const dia = fecha.getDay();
   horaSelect.innerHTML = '';
@@ -191,10 +203,19 @@ fechaInput.addEventListener('change', () => {
   } else {
     horarios = ['09:30', '11:00', '12:30', '14:00', '15:30', '17:00'];
   }
+  // AGREGADO - MARCA LAS HORAS YA OCUPADAS Y NO DEJA ELEGIRLAS
+  const ocupados = await consultarOcupados(fechaInput.value);
   horaSelect.innerHTML = '<option value="">Elegí una hora</option>';
   horarios.forEach(h => {
     const opt = document.createElement('option');
-    opt.textContent = h;
+    if (ocupados.includes(h)) {
+      opt.textContent = h + ' - Ocupado ❌';
+      opt.value = '';
+      opt.disabled = true;
+    } else {
+      opt.textContent = h;
+      opt.value = h;
+    }
     horaSelect.appendChild(opt);
   });
 });
@@ -294,6 +315,15 @@ async function reservar() {
   if (!tel) { alert('Escribí tu WhatsApp / teléfono'); return; }
   if (!document.getElementById('fecha').value) { alert('Elegí una fecha'); return; }
   if (!document.getElementById('hora').value) { alert('Elegí una hora'); return; }
+
+  // AGREGADO - DOBLE CHEQUEO ANTES DE GUARDAR, POR SI 2 PERSONAS ENTRAN AL MISMO TIEMPO
+  const ocupados = await consultarOcupados(f);
+  if (ocupados.includes(h)) {
+    alert('Esa hora ya está reservada 💅 Elegí otra hora porfa');
+    msgEl.style.display = 'block';
+    msgEl.textContent = 'Esa hora ya está reservada 💅 Elegí otra hora';
+    return;
+  }
 
   try {
     if (SHEET_URL && !SHEET_URL.includes('PEGAR_AQUI')) {

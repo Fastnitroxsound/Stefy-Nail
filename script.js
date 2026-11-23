@@ -1,6 +1,6 @@
 // STEFY NAIL - Versión 6 Optimizada
 console.log('Stefy Nail v6 Optimizada');
-const SHEET_URL = "PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxNWnoNQLw8t2FRRg8QeDEvsvhbje53OTM_4Ch46jWVHH58zSWNXPxSbkh5ZU0eIaJy/exec";
 
 // NUEVO - MERCADO PAGO - LINK VIEJO - QUEDA COMO RESPALDO, NO SE BORRA
 const MP_SENA = "https://link.mercadopago.com.ar/stefynail1";
@@ -177,6 +177,18 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') cambiar(-1);
 });
 
+// AGREGADO - PREGUNTA HORAS OCUPADAS ANTES DE GUARDAR
+async function consultarOcupados(fecha) {
+  try {
+    const r = await fetch(SHEET_URL + "?fecha=" + encodeURIComponent(fecha));
+    const data = await r.json();
+    return data.ocupados || [];
+  } catch (e) {
+    console.log('No se pudo consultar ocupados', e);
+    return [];
+  }
+}
+
 async function reservar() {
   let n = document.getElementById('nombre').value.trim();
   let ap = document.getElementById('apellido') ? document.getElementById('apellido').value.trim() : '';
@@ -194,13 +206,22 @@ async function reservar() {
   if (!tel) { alert('Escribí tu WhatsApp / teléfono'); return; }
   if (!document.getElementById('fecha').value) { alert('Elegí una fecha'); return; }
   if (!document.getElementById('hora').value) { alert('Elegí una hora'); return; }
+
+  // AGREGADO - SI ESA HORA YA ESTÁ OCUPADA, NO GUARDA
+  const ocupados = await consultarOcupados(f);
+  if (ocupados.includes(h)) {
+    alert('Esa hora ya está reservada 💅 Elegí otra hora porfa');
+    if (msgEl) { msgEl.style.display = 'block'; msgEl.textContent = 'Esa hora ya está reservada 💅 Elegí otra hora'; }
+    return;
+  }
+
   try {
     if (SHEET_URL && !SHEET_URL.includes('PEGAR_AQUI')) {
       await fetch(SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre: nombreCompleto, telefono: tel, servicio: s, fecha: f, hora: h, pago: textoPago })
+        body: JSON.stringify({ nombre: n, apellido: ap, telefono: tel, servicio: s, fecha: f, hora: h, pago: textoPago })
       });
     }
   } catch (e) {
