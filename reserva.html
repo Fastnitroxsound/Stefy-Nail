@@ -90,7 +90,6 @@ header::before {
   50% { transform: scale(1.02); }
   100% { transform: scale(1); }
 }
-/* AGREGADO - SEPARAR BARRA DE LOS BOTONES */
 .sub-header {
   padding-bottom: 18px !important;
 }
@@ -175,7 +174,15 @@ async function consultarOcupados(fecha) {
   try {
     const r = await fetch(SHEET_URL + "?fecha=" + encodeURIComponent(fecha));
     const data = await r.json();
-    return data.ocupados || [];
+    // Normaliza por si viene 9:30 o 09:30:00
+    return (data.ocupados || []).map(h => {
+      h = String(h).trim();
+      if (h.includes(":")) {
+        const p = h.split(":");
+        return p[0].padStart(2, "0") + ":" + p[1].padStart(2, "0");
+      }
+      return h;
+    });
   } catch (e) {
     console.log('No se pudo consultar ocupados', e);
     return [];
@@ -203,28 +210,24 @@ fechaInput.addEventListener('change', async () => {
   } else {
     horarios = ['09:30', '11:00', '12:30', '14:00', '15:30', '17:00'];
   }
-  // AGREGADO - MARCA LAS HORAS YA OCUPADAS Y NO DEJA ELEGIRLAS
+  // CAMBIADO - SOLO MUESTRA HORAS DISPONIBLES, LAS OCUPADAS NO APARECEN
   const ocupados = await consultarOcupados(fechaInput.value);
+  const disponibles = horarios.filter(h => !ocupados.includes(h));
   horaSelect.innerHTML = '<option value="">Elegí una hora</option>';
-  horarios.forEach(h => {
+  if (disponibles.length === 0) {
+    horaSelect.innerHTML = '<option value="">Sin turnos disponibles ese día</option>';
+    msgHorario.textContent = 'Ese día ya está completo 💖 Elegí otro día';
+    return;
+  }
+  disponibles.forEach(h => {
     const opt = document.createElement('option');
-    if (ocupados.includes(h)) {
-      opt.textContent = h + ' - Ocupado ❌';
-      opt.value = '';
-      opt.disabled = true;
-    } else {
-      opt.textContent = h;
-      opt.value = h;
-    }
+    opt.textContent = h;
+    opt.value = h;
     horaSelect.appendChild(opt);
   });
 });
 
 // AGREGADO - SEÑAS POR SERVICIO - 50% - NO BORRA LO VIEJO
-// 💅 Manos: Simple $12.500, Semi $12.500, Kapping $15.000, Esculpidas $20.000, Softgel $20.000
-// 🦶 Pies: Pedicura Sin Esmalte $12.500, Podo $15.000, Pedicura Con Esmalte $15.000, Pedicura Con Esculpidas $17.500
-// ✨ Cejas: Perfilado $10.000
-// ❌ Diseño desde $3.000 NO va en reserva, solo en Index
 const MP_POR_SERVICIO = {
   "Manicura Simple": "https://mpago.la/27Ka33S",
   "Manicura Semipermanente": "https://mpago.la/27Ka33S",
@@ -238,7 +241,6 @@ const MP_POR_SERVICIO = {
   "Perfilado de Cejas": "https://mpago.la/1eS7PZw"
 };
 
-// LINKS DE SEÑA POR MONTO - 50% DEL SERVICIO - QUEDA COMO RESPALDO
 const MP_LINKS = {
   10000: "https://mpago.la/1eS7PZw",
   12500: "https://mpago.la/27Ka33S",
@@ -274,7 +276,6 @@ function calcularSena() {
   return Math.round(precio * 0.5);
 }
 
-// AGREGADO - BUSCA LINK POR SERVICIO PRIMERO, SI NO LO ENCUENTRA USA POR MONTO
 function linkDeSena(sena, servicioTexto) {
   if (servicioTexto) {
     for (const nombre in MP_POR_SERVICIO) {
@@ -316,7 +317,7 @@ async function reservar() {
   if (!document.getElementById('fecha').value) { alert('Elegí una fecha'); return; }
   if (!document.getElementById('hora').value) { alert('Elegí una hora'); return; }
 
-  // AGREGADO - DOBLE CHEQUEO ANTES DE GUARDAR, POR SI 2 PERSONAS ENTRAN AL MISMO TIEMPO
+  // DOBLE CHEQUEO ANTES DE GUARDAR, POR SI 2 PERSONAS ENTRAN AL MISMO TIEMPO
   const ocupados = await consultarOcupados(f);
   if (ocupados.includes(h)) {
     alert('Esa hora ya está reservada 💅 Elegí otra hora porfa');
