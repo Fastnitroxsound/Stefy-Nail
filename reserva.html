@@ -167,65 +167,101 @@ header::before {
 
 <script>
 // STEFY NAIL - SOLO RESERVAR
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbzr3Wk0Aj4BYiDBro9EvkA8vOhiq1_qGfNn3ek82-HuffJGsX9tbFu4NYySLMiVX0pG/exec";
+// NUEVA IMPLEMENTACION DE APPS SCRIPT
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbzTBtp_n2A77aeXu47w9TctLoFmJ4FKxARZRwk7GlPLpqXQfQmjLtR6nYPS-uI8r5Jt/exec";
 
-// AGREGADO - PREGUNTA HORAS OCUPADAS ANTES DE GUARDAR
+// Normaliza una hora a formato HH:MM
+function normalizarHora(h) {
+  h = String(h).trim();
+  if (h.includes(":")) {
+    const p = h.split(":");
+    return p[0].padStart(2, "0") + ":" + p[1].substring(0, 2).padStart(2, "0");
+  }
+  return h;
+}
+
+// CORREGIDO - PREGUNTA HORAS OCUPADAS SIEMPRE A LA PLANILLA (SIN CACHE)
+// Devuelve un array con las horas ocupadas, o null si no se pudo consultar
 async function consultarOcupados(fecha) {
   try {
-    const r = await fetch(SHEET_URL + "?fecha=" + encodeURIComponent(fecha));
+    const url = SHEET_URL + "?fecha=" + encodeURIComponent(fecha) + "&t=" + Date.now();
+    const r = await fetch(url, { cache: "no-store" });
     const data = await r.json();
-    return (data.ocupados || []).map(h => {
-      h = String(h).trim();
-      if (h.includes(":")) {
-        const p = h.split(":");
-        return p[0].padStart(2, "0") + ":" + p[1].padStart(2, "0");
-      }
-      return h;
-    });
+    if (data.error) throw new Error(data.error);
+    return (data.ocupados || []).map(normalizarHora);
   } catch (e) {
     console.log('No se pudo consultar ocupados', e);
-    return [];
+    return null;
   }
 }
 
-// AGREGADO - HORARIOS 1H30 - LUN A VIE 9:30 A 19:00 / SAB 9:30 A 14:00
+// Fecha de hoy según la hora local (no UTC)
+function hoyLocal() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+// HORARIOS 1H30 - LUN A VIE 9:30 A 19:00 / SAB 9:30 A 14:00
 const fechaInput = document.getElementById('fecha');
 const horaSelect = document.getElementById('hora');
 const msgHorario = document.getElementById('msgHorario');
-fechaInput.min = new Date().toISOString().split('T')[0];
-fechaInput.addEventListener('change', async () => {
+fechaInput.min = hoyLocal();
+
+let consultaId = 0;
+
+async function actualizarHoras() {
+  const miConsulta = ++consultaId;
+  if (!fechaInput.value) return;
+
   const fecha = new Date(fechaInput.value + 'T12:00:00');
   const dia = fecha.getDay();
   horaSelect.innerHTML = '';
   msgHorario.textContent = '';
+
   if (dia === 0) {
     horaSelect.innerHTML = '<option value="">Cerrado los domingos</option>';
     msgHorario.textContent = 'Stefy no atiende los domingos 💅';
     return;
   }
+
   let horarios = [];
   if (dia === 6) {
     horarios = ['09:30', '11:00', '12:30'];
   } else {
     horarios = ['09:30', '11:00', '12:30', '14:00', '15:30', '17:00'];
   }
+
+  horaSelect.innerHTML = '<option value="">Consultando horarios...</option>';
   const ocupados = await consultarOcupados(fechaInput.value);
+
+  // Si mientras tanto eligió otra fecha, ignoramos esta respuesta
+  if (miConsulta !== consultaId) return;
+
+  if (ocupados === null) {
+    horaSelect.innerHTML = '<option value="">No se pudieron consultar los horarios</option>';
+    msgHorario.textContent = 'No pudimos verificar los horarios 😔 Volvé a elegir la fecha o recargá la página';
+    return;
+  }
+
   const disponibles = horarios.filter(h => !ocupados.includes(h));
-  horaSelect.innerHTML = '<option value="">Elegí una hora</option>';
   if (disponibles.length === 0) {
     horaSelect.innerHTML = '<option value="">Sin turnos disponibles ese día</option>';
     msgHorario.textContent = 'Ese día ya está completo 💖 Elegí otro día';
     return;
   }
+
+  horaSelect.innerHTML = '<option value="">Elegí una hora</option>';
   disponibles.forEach(h => {
     const opt = document.createElement('option');
     opt.textContent = h;
     opt.value = h;
     horaSelect.appendChild(opt);
   });
-});
+}
 
-// AGREGADO - SEÑAS POR SERVICIO - 50% - NO BORRA LO VIEJO
+fechaInput.addEventListener('change', actualizarHoras);
+
+// SEÑAS POR SERVICIO - 50% - NO BORRA LO VIEJO
 const MP_POR_SERVICIO = {
   "Manicura Simple": "https://mpago.la/27Ka33S",
   "Manicura Semipermanente": "https://mpago.la/27Ka33S",
@@ -296,7 +332,11 @@ actualizarSena();
 
 document.getElementById('btnReservar').addEventListener('click', reservar);
 
+let reservando = false;
+
 async function reservar() {
+  if (reservando) return; // evita doble click
+
   let n = document.getElementById('nombre').value.trim();
   let ap = document.getElementById('apellido').value.trim();
   let nombreCompleto = ap ? n + ' ' + ap : n;
@@ -315,30 +355,50 @@ async function reservar() {
   if (!document.getElementById('fecha').value) { alert('Elegí una fecha'); return; }
   if (!document.getElementById('hora').value) { alert('Elegí una hora'); return; }
 
-  const ocupados = await consultarOcupados(f);
-  if (ocupados.includes(h)) {
-    alert('Esa hora ya está reservada 💅 Elegí otra hora porfa');
-    msgEl.style.display = 'block';
-    msgEl.textContent = 'Esa hora ya está reservada 💅 Elegí otra hora';
-    return;
-  }
+  reservando = true;
+  const btn = document.getElementById('btnReservar');
+  btn.disabled = true;
 
   try {
-    if (SHEET_URL && !SHEET_URL.includes('PEGAR_AQUI')) {
-      await fetch(SHEET_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre: n, apellido: ap, telefono: tel, servicio: s, fecha: f, hora: h, pago: textoPago })
-      });
+    // Última verificación justo antes de guardar
+    const ocupados = await consultarOcupados(f);
+    if (ocupados === null) {
+      alert('No pudimos verificar la disponibilidad 😔 Probá de nuevo en un momento');
+      msgEl.style.display = 'block';
+      msgEl.textContent = 'No pudimos verificar la disponibilidad. Probá de nuevo 💖';
+      return;
     }
-  } catch (e) { console.log('Error guardando en Excel', e); }
+    if (ocupados.includes(h)) {
+      alert('Esa hora ya está reservada 💅 Elegí otra hora porfa');
+      msgEl.style.display = 'block';
+      msgEl.textContent = 'Esa hora ya está reservada 💅 Elegí otra hora';
+      actualizarHoras(); // refresca la lista sin esa hora
+      return;
+    }
 
-  msgEl.style.display = 'block';
-  msgEl.innerHTML = '¡Turno guardado! 💖<br><br><a href="' + linkPago + '" target="_blank" style="display:inline-block;background:#ff5da2;color:#fff;padding:14px 22px;border-radius:30px;text-decoration:none;font-weight:bold;">Pagar Seña ' + formatear(sena) + ' 💳</a><br><small>Tocá el botón para pagar por Mercado Pago</small>';
+    try {
+      if (SHEET_URL && !SHEET_URL.includes('PEGAR_AQUI')) {
+        await fetch(SHEET_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nombre: n, apellido: ap, telefono: tel, servicio: s, fecha: f, hora: h, pago: textoPago })
+        });
+      }
+    } catch (e) { console.log('Error guardando en Excel', e); }
 
-  let msg = `Hola Stefy! Soy ${nombreCompleto} (${tel}), quiero reservar ${s} para el ${f} a las ${h} 💅 - Pago: ${textoPago}`;
-  window.open('https://wa.me/5491151173182?text=' + encodeURIComponent(msg), '_blank');
+    msgEl.style.display = 'block';
+    msgEl.innerHTML = '¡Turno guardado! 💖<br><br><a href="' + linkPago + '" target="_blank" style="display:inline-block;background:#ff5da2;color:#fff;padding:14px 22px;border-radius:30px;text-decoration:none;font-weight:bold;">Pagar Seña ' + formatear(sena) + ' 💳</a><br><small>Tocá el botón para pagar por Mercado Pago</small>';
+
+    let msg = `Hola Stefy! Soy ${nombreCompleto} (${tel}), quiero reservar ${s} para el ${f} a las ${h} 💅 - Pago: ${textoPago}`;
+    window.open('https://wa.me/5491151173182?text=' + encodeURIComponent(msg), '_blank');
+
+    // Refresca las horas para que la reservada desaparezca de la lista
+    actualizarHoras();
+  } finally {
+    reservando = false;
+    btn.disabled = false;
+  }
 }
 </script>
 
