@@ -1,6 +1,6 @@
-// STEFY NAIL - Service Worker - Versión 7
+// STEFY NAIL - Service Worker - Versión 8
 // Cambiar este nombre borra la caché vieja en todos los celulares
-const CACHE_NAME = 'stefy-nail-v7';
+const CACHE_NAME = 'stefy-nail-v8';
 
 const urlsToCache = [
   './',
